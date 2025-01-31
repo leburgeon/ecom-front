@@ -23,9 +23,9 @@ export default userSlice.reducer
 export const login = (credentials) => {
   return async (dispatch) => {
     try {
-      const { username, name, token } = await userService.login(credentials)
-      dispatch(setUser({username, name, token}))
-      window.localStorage.setItem('ecomUser', JSON.stringify({username, name, token}))
+      const { email, name, token } = await userService.login(credentials)
+      dispatch(setUser({email, name, token}))
+      window.localStorage.setItem('ecomUser', JSON.stringify({email, name, token}))
       dispatch(notify({
         message: `Welcome ${name}!`,
         severity: 'success'
@@ -34,7 +34,8 @@ export const login = (credentials) => {
       dispatch(logout())
       let errorMessage = error.message
       if (error instanceof AxiosError){
-        errorMessage = `Error logging in: ${error.response.status}`
+        console.error(error)
+        errorMessage = `Error logging in: ${error.response.data.error}`
       }
       dispatch(notify({message: errorMessage, severity: 'error'}))
     }

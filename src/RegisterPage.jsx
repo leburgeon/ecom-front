@@ -28,19 +28,24 @@ const RegisterPage = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
     console.log('register submit')
-    try {
-      await userService.registerNewUser({email, name, password})
-      dispatch(login({email, password}))
-    } catch (error) {
-      console.error(error)
-      let errorMessage = "Error Registering: "
-      if (error instanceof AxiosError){
-        if (error.response.status === 409){
-          errorMessage += 'An account with that email already exists. Try logging in'
+    if (password.length < 5){
+      dispatch(notify({message: "Password too short, min length of 5", severity: "error"}))
+    } else {
+      try {
+        await userService.registerNewUser({email, name, password})
+        dispatch(login({email, password}))
+      } catch (error) {
+        console.error(error)
+        let errorMessage = "Error Registering: "
+        if (error instanceof AxiosError){
+          if (error.response.status === 409){
+            errorMessage += 'An account with that email already exists. Try logging in'
+          }
         }
+        dispatch(notify({message: errorMessage, severity: 'error'}))
       }
-      dispatch(notify({message: errorMessage, severity: 'error'}))
     }
+    
   };
 
   return (
@@ -84,7 +89,7 @@ const RegisterPage = () => {
               </Button>
             </Grid>
             <Grid item xs={6}>
-              <Button variant="outlined" color="secondary" fullWidth component={Link} to='/register'>
+              <Button variant="outlined" color="secondary" fullWidth component={Link} to='/login'>
                 Sign in
               </Button>
             </Grid>
