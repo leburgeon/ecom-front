@@ -1,76 +1,57 @@
-import * as React from 'react';
-import { styled } from '@mui/material/styles';
-import Card from '@mui/material/Card';
-import CardHeader from '@mui/material/CardHeader';
-import CardMedia from '@mui/material/CardMedia';
-import CardContent from '@mui/material/CardContent';
-import CardActions from '@mui/material/CardActions';
-import Collapse from '@mui/material/Collapse';
-import Avatar from '@mui/material/Avatar';
-import IconButton from '@mui/material/IconButton';
-import Typography from '@mui/material/Typography';
-import { red } from '@mui/material/colors';
-import FavoriteIcon from '@mui/icons-material/Favorite';
-import ShareIcon from '@mui/icons-material/Share';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import MoreVertIcon from '@mui/icons-material/MoreVert';
+import {
+  Card,
+  CardHeader,
+  CardMedia,
+  CardContent,
+  CardActions,
+  CardActionArea,
+  IconButton,
+  Typography,
+  Rating,
+  Box
+} from "@mui/material";
 
-const ExpandMore = styled((props) => {
-  const { expand, ...other } = props;
-  return <IconButton {...other} />;
-})(({ theme }) => ({
-  marginLeft: 'auto',
-  transition: theme.transitions.create('transform', {
-    duration: theme.transitions.duration.shortest,
-  }),
-  variants: [
-    {
-      props: ({ expand }) => !expand,
-      style: {
-        transform: 'rotate(0deg)',
-      },
-    },
-    {
-      props: ({ expand }) => !!expand,
-      style: {
-        transform: 'rotate(180deg)',
-      },
-    },
-  ],
-}));
+import { Favorite as FavoriteIcon, Share as ShareIcon } from "@mui/icons-material";
 
-const ProductCard = ({ id, name, price, firstImage, description, seller }) => {
+import { useNavigate } from "react-router-dom";
+
+
+
+const ProductCard = ({ id, name, price, firstImage, description, seller, rating, ratingCount = 178393 }) => {
+
+  const navigate = useNavigate()
 
   return (
-    <Card>
-      <CardHeader
-        action={
-          <IconButton aria-label="settings">
-            <MoreVertIcon />
-          </IconButton>
-        }
-        title={name|| 'Demo Bike Super Mudder'}
-        subheader={`Sold By: ${seller || 'ABikerLot'}`}
-      />
+    <Card sx={{display: 'flex', flexDirection: 'column', width: 250}}>
+      <CardActionArea onClick={() => {
+        navigate(`/product/${id}`)
+      }}>
       <CardMedia
         component="img"
-        sx={{ height: 200, width: 'auto'}}
+        sx={{ height: 150, width: 'auto'}}
         image="https://www.legnanobici.com/wp-content/uploads/2020/10/L750_GREY.jpg"
         alt="Paella dish"
       />
+      <CardHeader
+        title={name|| 'Demo Bike Super Mudder'}
+        subheader={`Sold By: ${seller || 'ABikerLot'}`}
+      />
+      </CardActionArea>
       <CardContent>
-        <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-          {description || 'This is a big old bike with cruizing, sexy fast wheels! Be there or be square!'}
+        <Typography variant="h5" sx={{ color: 'text.secondary' }}>
+          {`£${price||'199'}`}
         </Typography>
+        <Box display='flex' alignItems='center'>
+          <Rating value={rating || 4.6} readOnly precision={0.1} size='small'/>
+          <h5>{`(${ratingCount
+            ? ratingCount >= 1000 
+              ? `${Math.floor(ratingCount/100) / 10}K`
+              : ratingCount
+            : 0
+
+          })`}</h5>
+        </Box>
       </CardContent>
-      <CardActions disableSpacing>
-        <IconButton aria-label="add to favorites">
-          <FavoriteIcon />
-        </IconButton>
-        <IconButton aria-label="share">
-          <ShareIcon />
-        </IconButton>
-      </CardActions>
     </Card>
   );
 }

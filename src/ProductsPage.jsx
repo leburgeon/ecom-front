@@ -4,20 +4,18 @@ import { Stack,
 } from '@mui/material'
 import { useSelector } from 'react-redux'
 import ProductCard from './components/ProductCard'
+import { Grid2 as Grid } from '@mui/material'
 
 const ProductsPage = () => {
   const [loading, setLoading] = useState(true)
 
-  const products = useSelector(store => store.products || [])
+  
 
   return (
-    <Stack 
-      divider={<Divider orientation='horizontal' flexItem />}
-      spacing={3}
-    >
+    <Grid container spacing={2}>
       <ProductCard></ProductCard>
       <ProductCard></ProductCard>
-    </Stack>
+    </Grid>
   )
 }
 
