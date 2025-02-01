@@ -28,9 +28,8 @@ const ProductCard = ({ id, name, price, firstImage, description, seller, rating,
       }}>
       <CardMedia
         component="img"
-        sx={{ height: 150, width: 'auto'}}
-        image="https://www.legnanobici.com/wp-content/uploads/2020/10/L750_GREY.jpg"
-        alt="Paella dish"
+        sx={{ height: 150, width: 'auto', margin: '0 auto'}}
+        image="https://cdn.speedsize.com/4190f681-07cb-43aa-92d2-6096b01e7b62/https://cms.ribblecycles.co.uk.cfstack.com/assets/images/heros/homepage-banner-sram-mobile-2.jpg"
       />
       <CardHeader
         title={name|| 'Demo Bike Super Mudder'}
@@ -43,13 +42,15 @@ const ProductCard = ({ id, name, price, firstImage, description, seller, rating,
         </Typography>
         <Box display='flex' alignItems='center'>
           <Rating value={rating || 4.6} readOnly precision={0.1} size='small'/>
-          <h5>{`(${ratingCount
+          <Typography variant="body2" sx={{ marginLeft: 0.5 }}>
+          {`(${ratingCount
             ? ratingCount >= 1000 
               ? `${Math.floor(ratingCount/100) / 10}K`
               : ratingCount
             : 0
 
-          })`}</h5>
+          })`}
+          </Typography>
         </Box>
       </CardContent>
     </Card>
