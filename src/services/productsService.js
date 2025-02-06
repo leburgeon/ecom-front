@@ -5,7 +5,7 @@ import { baseUrl } from "./utils"
 // Method is passed a filters object containing any desired filters, including pagination
 const retrieveProducts = async (filters) => {
   const params = new URLSearchParams(filters)
-  const response = await axios.get(baseUrl + '/products' + params.toString())
+  const response = await axios.get(baseUrl + '/api/products?' + params.toString())
   return response.data
 }
 

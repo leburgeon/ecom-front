@@ -3,15 +3,11 @@ import {
   CardHeader,
   CardMedia,
   CardContent,
-  CardActions,
   CardActionArea,
-  IconButton,
   Typography,
   Rating,
   Box
 } from "@mui/material";
-
-import { Favorite as FavoriteIcon, Share as ShareIcon } from "@mui/icons-material";
 
 import { useNavigate } from "react-router-dom";
 
@@ -29,7 +25,7 @@ const ProductCard = ({ id, name, price, firstImage, description, seller, rating,
       <CardMedia
         component="img"
         sx={{ height: 150, width: 'auto', margin: '0 auto'}}
-        image="https://cdn.speedsize.com/4190f681-07cb-43aa-92d2-6096b01e7b62/https://cms.ribblecycles.co.uk.cfstack.com/assets/images/heros/homepage-banner-sram-mobile-2.jpg"
+        image={firstImage}
       />
       <CardHeader
         title={name|| 'Demo Bike Super Mudder'}
