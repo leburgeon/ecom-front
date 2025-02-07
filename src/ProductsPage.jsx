@@ -4,23 +4,30 @@ import { Grid2 as Grid } from '@mui/material'
 import ProductSearchBar from './components/ProductsSearchBar'
 import { useDispatch, useSelector } from 'react-redux'
 import { searchWith } from './reducers/productsReducer'
+import { updateFilter } from './reducers/filtersReducer'
+import PaginationController from './components/PaginationController'
 
 const ProductsPage = () => {
 
-  const { searched, pagedProdcuts } = useSelector(store => store.products)
+  const { searched, pagedProducts } = useSelector(store => store.products)
   const dispatch = useDispatch()
 
   const handleSearch = (filters) => {
     dispatch(searchWith(filters))
+    console.log(filters)
+    dispatch(updateFilter(filters))
   }
 
   const renderProducts = () => {
     return (
-      <Grid container spacing={2}>
-        {pagedProdcuts.map((product) => (
-          <ProductCard key={product.id} {...product} />
-        ))}
-      </Grid>
+      <>
+        <Grid container spacing={2}>
+          {pagedProducts.map((product) => (
+            <ProductCard key={product.id} {...product} />
+          ))}
+        </Grid>
+        <PaginationController/>
+      </>      
     )
   }
 
@@ -32,7 +39,7 @@ const ProductsPage = () => {
 
   const renderSearchSomthing = () => {
     return (
-      <h3>Try searching for somthing or search by category!</h3>
+      <h3>Try searching for something!</h3>
     )
   }
 
@@ -40,7 +47,7 @@ const ProductsPage = () => {
     <>
       <ProductSearchBar onSearch={handleSearch}/>
       {searched 
-        ? pagedProdcuts.length > 0 
+        ? pagedProducts.length > 0 
           ? renderProducts()
           : renderNoneFound()
         : renderSearchSomthing()}

@@ -2,7 +2,6 @@ import { useState } from 'react';
 import {
   Box,
   TextField,
-  Slider,
   Checkbox,
   FormControlLabel,
   Button,
@@ -14,7 +13,7 @@ import {
 const ProductSearchBar = ({ onSearch = (filters) => {console.log(filters)} }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [categories, setCategories] = useState([]);
-  const [priceRange, setPriceRange] = useState([0, 1000]);
+  const [priceRange, setPriceRange] = useState([null, null]);
   const [inStockOnly, setInStockOnly] = useState(false);
 
   // Example category options
@@ -66,20 +65,30 @@ const ProductSearchBar = ({ onSearch = (filters) => {console.log(filters)} }) =>
           />
         </Grid2>
 
-        {/* Price Range Slider */}
+        {/* Price Range Inputs */}
         <Grid2 xs={12} md={4}>
-          <Box>
-            <Slider
-              value={priceRange}
-              onChange={(e, newValue) => setPriceRange(newValue)}
-              valueLabelDisplay="auto"
-              min={0}
-              max={1000}
+          <Box display="flex" alignItems="center">
+            <TextField
+              label="Min Price"
+              type="number"
+              value={priceRange[0] !== null ? priceRange[0] : ''}
+              onChange={(e) => setPriceRange([Number(e.target.value), priceRange[1]])}
+              variant="outlined"
+              sx={{ marginRight: 2 }}
+              InputProps={{
+                startAdornment: <Typography sx={{ marginRight: 1 }}>£</Typography>,
+              }}
             />
-            <Box display="flex" justifyContent="space-between" mt={1}>
-              <Typography sx={{marginRight: 1}} variant="body2">Min: {priceRange[0]}</Typography>
-              <Typography variant="body2">Max: {priceRange[1]}</Typography>
-            </Box>
+            <TextField
+              label="Max Price"
+              type="number"
+              value={priceRange[1] !== null ? priceRange[1] : ''}
+              onChange={(e) => setPriceRange([priceRange[0], Number(e.target.value)])}
+              variant="outlined"
+              InputProps={{
+                startAdornment: <Typography sx={{ marginRight: 1 }}>£</Typography>,
+              }}
+            />
           </Box>
         </Grid2>
 
