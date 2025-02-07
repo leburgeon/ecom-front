@@ -12,7 +12,7 @@ import {
 
 const ProductSearchBar = ({ onSearch = (filters) => {console.log(filters)} }) => {
   const [searchQuery, setSearchQuery] = useState('');
-  const [categories, setCategories] = useState([]);
+  const [category, setCategory] = useState(null); // Changed to single category
   const [priceRange, setPriceRange] = useState([null, null]);
   const [inStockOnly, setInStockOnly] = useState(false);
 
@@ -27,7 +27,7 @@ const ProductSearchBar = ({ onSearch = (filters) => {console.log(filters)} }) =>
   const handleSearch = () => {
     onSearch({
       query: searchQuery,
-      categories: categories.map((cat) => cat.value),
+      category: category ? category.value : null, // Changed to single category
       minPrice: priceRange[0],
       maxPrice: priceRange[1],
       inStockOnly,
@@ -38,27 +38,25 @@ const ProductSearchBar = ({ onSearch = (filters) => {console.log(filters)} }) =>
     <Box
       sx={{
         width: '100%',
-        maxWidth: 800,
         margin: 'auto',
         padding: 2,
       }}
     >
       <Grid2 container spacing={2} alignItems="center">
-        {/* Categories Autocomplete */}
+        {/* Category Autocomplete */}
         <Grid2 xs={12} md={6} sx={{ minWidth: 200 }}>
           <Autocomplete
-            multiple
             fullWidth
             options={categoryOptions}
             getOptionLabel={(option) => option.label}
-            value={categories}
-            onChange={(event, newValue) => setCategories(newValue)}
+            value={category}
+            onChange={(event, newValue) => setCategory(newValue)}
             renderInput={(params) => (
               <TextField
                 {...params}
                 fullWidth
                 variant="outlined"
-                label="Categories"
+                label="Category"
                 placeholder="Select"
               />
             )}

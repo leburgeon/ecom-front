@@ -26,8 +26,9 @@ const ProductsPage = () => {
             <ProductCard key={product.id} {...product} />
           ))}
         </Grid>
-        <PaginationController/>
-      </>      
+        <PaginationController />
+      </>
+      
     )
   }
 
@@ -51,6 +52,7 @@ const ProductsPage = () => {
           ? renderProducts()
           : renderNoneFound()
         : renderSearchSomthing()}
+      
     </>
     
   )
