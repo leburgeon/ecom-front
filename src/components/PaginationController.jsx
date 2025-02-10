@@ -7,6 +7,9 @@ const PaginationController = () => {
   const dispatch = useDispatch()
   const { page, limit, pageCount } = useSelector(store => store.products.pagination)
 
+  console.log('#################################')
+  console.log(page, limit, pageCount)
+
   const handlePageChange = (newPage) => {
     dispatch(goToPage(newPage))
   }

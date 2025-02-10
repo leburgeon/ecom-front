@@ -64,7 +64,7 @@ export const searchWith = (filters) => {
       console.log(data)
       dispatch(setProducts(data.products))
       dispatch(setSearched())
-      dispatch(setProductCount(data.productCount))
+      dispatch(setProductCount(data.productsCount))
       dispatch(setPage(1))
     } catch (error) {
       console.error(error)

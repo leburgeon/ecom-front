@@ -13,9 +13,13 @@ import { useNavigate } from "react-router-dom";
 
 
 
-const ProductCard = ({ id, name, price, firstImage, description, seller, rating, ratingCount = 178393 }) => {
+const ProductCard = ({ id, name, price, firstImage, seller, rating}) => {
 
   const navigate = useNavigate()
+
+  const ratingCount = rating.count
+  const ratingAverage = rating.total / ratingCount
+
 
   return (
     <Card sx={{display: 'flex', flexDirection: 'column', width: 250}}>
@@ -37,7 +41,7 @@ const ProductCard = ({ id, name, price, firstImage, description, seller, rating,
           {`£${price||'199'}`}
         </Typography>
         <Box display='flex' alignItems='center'>
-          <Rating value={rating || 4.6} readOnly precision={0.1} size='small'/>
+          <Rating value={ratingAverage} readOnly precision={0.1} size='small'/>
           <Typography variant="body2" sx={{ marginLeft: 0.5 }}>
           {`(${ratingCount
             ? ratingCount >= 1000 
