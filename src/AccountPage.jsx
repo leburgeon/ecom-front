@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Button, Container, Typography, Card, CardContent, CircularProgress, List, ListItem, ListItemText } from "@mui/material";
 import { logout } from './reducers/userReducer'
+import { notify } from './reducers/notificationReducer'
+import orderService from './services/orderService'
 
 const AccountPage = () => {
   
@@ -14,11 +16,15 @@ const AccountPage = () => {
   useEffect(() => {
     const fetchOrders = async () => {
       try {
-        const response = await fetch("/api/orders"); // Replace with actual API endpoint
-        const data = await response.json();
+        const data = await orderService.getOrdersForUser()
         setOrders(data);
       } catch (error) {
         console.error("Error fetching orders:", error);
+        dispatch(logout())
+        dispatch(notify({
+          message: `${error.message}`,
+          severity: 'info'
+        }))
       } finally {
         setLoading(false);
       }

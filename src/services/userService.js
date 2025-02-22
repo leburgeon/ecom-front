@@ -1,6 +1,11 @@
 import axios from "axios";
 import { baseUrl } from "./utils";
 
+// Sets the global authorisation token for requests in this module
+const setAuthToken = (token) => {
+  axios.defaults.headers.common['Authorization'] = `Bearer ${token}`
+}
+
 // For attempting to parse user info from localstorage for user initial state
 const getFromLocalSync = () => {
   // Attempt to retrieve the user data from local storage
@@ -34,4 +39,4 @@ const registerNewUser = async (credentials) => {
   return response.data
 }
 
-export default {getFromLocalSync, login, registerNewUser}
+export default {getFromLocalSync, login, registerNewUser, setAuthToken}

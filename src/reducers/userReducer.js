@@ -26,6 +26,7 @@ export const login = (credentials) => {
       const { email, name, token } = await userService.login(credentials)
       dispatch(setUser({email, name, token}))
       window.localStorage.setItem('ecomUser', JSON.stringify({email, name, token}))
+      userService.setAuthToken(token)
       dispatch(notify({
         message: `Welcome ${name}!`,
         severity: 'success'
