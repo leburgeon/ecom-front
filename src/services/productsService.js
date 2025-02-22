@@ -18,4 +18,10 @@ const getPageOf = async (filters) => {
   return response.data
 }
 
-export default {retrieveProducts, getPageOf}
+// Method for retrieving the data of a single product
+const getProduct = async (id) => {
+  const response = await axios.get(baseUrl + '/api/products/' + id)
+  return response.data
+}
+
+export default {retrieveProducts, getPageOf, getProduct}

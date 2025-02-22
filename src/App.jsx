@@ -8,6 +8,7 @@ import { useSelector } from "react-redux"
 import { v4 as uuidv4} from 'uuid'
 import RegisterPage from "./RegisterPage"
 import AccountPage from './AccountPage'
+import SingleProductPage from "./components/SingleProductPage"
 
 function App() {
   const notifications = useSelector(store => store.notifications)
@@ -24,6 +25,7 @@ function App() {
         <Route path='/basket' element={<Basket/>}/>
         <Route path='/register' element={user ? <Navigate to='/'/> : <RegisterPage/>}/>
         <Route path='/account' element={user ? <AccountPage/> : <Navigate to='/login'/>}/>
+        <Route path='/product/:id' element={<SingleProductPage/>}/>
       </Routes>
     </>
   )
