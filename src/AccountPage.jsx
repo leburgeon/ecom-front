@@ -19,10 +19,13 @@ const AccountPage = () => {
         const data = await orderService.getOrdersForUser()
         setOrders(data);
       } catch (error) {
-        console.error("Error fetching orders:", error);
-        dispatch(logout())
+        let errorMessage = 'Error fetching orders:'
+        if (error.response.status === 401){
+          dispatch(logout())
+          errorMessage += 'Authentication token expired, please re-login'
+        }
         dispatch(notify({
-          message: `${error.message}`,
+          message: `${errorMessage}`,
           severity: 'info'
         }))
       } finally {
