@@ -18,7 +18,9 @@ const getFromLocalSync = () => {
 
   // Attempts to parse the JSON formatted data, loggs the error if error parsing and returns null
   try {
-    return {...JSON.parse(userInLocal)}
+    const parsed = {...JSON.parse(userInLocal)}
+    setAuthToken(parsed.token)
+    return parsed
   } catch (error){
     console.error(error)
     window.localStorage.removeItem('ecomUser')

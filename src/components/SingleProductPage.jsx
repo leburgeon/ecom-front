@@ -10,16 +10,22 @@ import {
   Grid,
   Box,
   Rating,
+  Tooltip,
 } from "@mui/material";
 import productService from "../services/productsService";
+import { useDispatch, useSelector } from "react-redux";
+import {notify} from '../reducers/notificationReducer'
+import productsService from "../services/productsService";
 
 const SingleProductPage = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch()
   const params = useParams();
   const id = params.id;
   const [product, setProduct] = useState(null);
   const [notFound, setNotFound] = useState(false);
   const [descExpanded, setDescExpanded] = useState(false);
+  const user = useSelector(store => store.user)
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -58,6 +64,26 @@ const SingleProductPage = () => {
   // Compute the average rating (if count is 0, average is 0)
   const averageRating =
     product.rating.count > 0 ? product.rating.total / product.rating.count : 0;
+
+  const handleAddToBasket = async () => {
+    // Logic to add the product to the basket
+    if (!user){
+      navigate('/login')
+      dispatch(notify({
+        message: 'Please login to add items to your basket',
+        severity: 'info'
+      }))
+    } else {
+      try {
+        const data = await productsService.addProductToBasket(product.id, 1)
+        console.log('Product added to basket! Now in basket:' + data.basketCount + ' unique items')
+        
+      } catch (error){
+        console.error(error)
+      }
+    }
+    
+  };
 
   return (
     <Container sx={{ my: 4 }}>
@@ -110,6 +136,22 @@ const SingleProductPage = () => {
         <Typography variant="body2" sx={{ ml: 1 }}>
           {averageRating.toFixed(1)} ({product.rating.count} reviews)
         </Typography>
+      </Box>
+
+      {/* Add to Basket Button */}
+      <Box sx={{ mt: 3 }}>
+        <Tooltip title={product.stock <= 0 ? "Out of stock" : ""}>
+          <span>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={handleAddToBasket}
+              disabled={product.stock <= 0}
+            >
+              Add to Basket
+            </Button>
+          </span>
+        </Tooltip>
       </Box>
 
       {/* Collapsible Description */}

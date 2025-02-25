@@ -24,4 +24,9 @@ const getProduct = async (id) => {
   return response.data
 }
 
-export default {retrieveProducts, getPageOf, getProduct}
+const addProductToBasket = async (productId, quantity) => {
+  const response = await axios.post(baseUrl + '/api/basket/add', {productId, quantity})
+  return response.data
+}
+
+export default {retrieveProducts, getPageOf, getProduct, addProductToBasket}
