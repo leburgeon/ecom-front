@@ -2,6 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 import userService from '../services/userService'
 import { notify, clearAll as clearAllNotifications } from './notificationReducer'
 import { AxiosError } from "axios";
+import { resetBasket, setBasketCount } from "./basketReducer";
 
 const userSlice = createSlice({
   name: 'user',
@@ -23,7 +24,7 @@ export default userSlice.reducer
 export const login = (credentials) => {
   return async (dispatch) => {
     try {
-      const { email, name, token } = await userService.login(credentials)
+      const { email, name, token, metaData } = await userService.login(credentials)
       dispatch(setUser({email, name, token}))
       window.localStorage.setItem('ecomUser', JSON.stringify({email, name, token}))
       userService.setAuthToken(token)
@@ -31,6 +32,7 @@ export const login = (credentials) => {
         message: `Welcome ${name}!`,
         severity: 'success'
       }))
+      dispatch(setBasketCount(metaData.basketCount))
     } catch (error){
       dispatch(logout())
       let errorMessage = error.message
@@ -48,6 +50,7 @@ export const logout = () => {
     dispatch(clearUser())
     window.localStorage.removeItem('ecomUser')
     dispatch(clearAllNotifications())
+    dispatch(resetBasket())
   }
 }
 

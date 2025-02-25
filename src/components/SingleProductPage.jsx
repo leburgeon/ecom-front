@@ -16,6 +16,7 @@ import productService from "../services/productsService";
 import { useDispatch, useSelector } from "react-redux";
 import {notify} from '../reducers/notificationReducer'
 import productsService from "../services/productsService";
+import { setBasketCount } from '../reducers/basketReducer'
 
 const SingleProductPage = () => {
   const navigate = useNavigate();
@@ -77,7 +78,7 @@ const SingleProductPage = () => {
       try {
         const data = await productsService.addProductToBasket(product.id, 1)
         console.log('Product added to basket! Now in basket:' + data.basketCount + ' unique items')
-        
+        dispatch(setBasketCount(data.basketCount))
       } catch (error){
         console.error(error)
       }

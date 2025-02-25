@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 
 const Navbar = () => {
   const user = useSelector(store => store.user)
+  const basketCount = useSelector(store => store.basket.count)
   return (
     <AppBar position="static">
       <Toolbar>
@@ -18,7 +19,7 @@ const Navbar = () => {
             Products
           </Button>
           <Button color="inherit" component={Link} to="/basket">
-            Basket
+            Basket <Typography>{basketCount <= 0 ? '' : basketCount > 99 ? ' (99+)' : ` (${basketCount})`}</Typography>
           </Button>
           <Button color="inherit" component={Link} to={user ? "/account" : "/login"}>
             {user ? "Account" : "Login"}
