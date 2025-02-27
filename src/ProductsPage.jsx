@@ -14,7 +14,6 @@ const ProductsPage = () => {
 
   const handleSearch = (filters) => {
     dispatch(searchWith(filters))
-    console.log(filters)
     dispatch(updateFilter(filters))
   }
 

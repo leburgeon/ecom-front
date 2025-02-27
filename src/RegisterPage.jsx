@@ -27,7 +27,6 @@ const RegisterPage = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    console.log('register submit')
     if (password.length < 5){
       dispatch(notify({message: "Password too short, min length of 5", severity: "error"}))
     } else {

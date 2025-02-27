@@ -32,7 +32,6 @@ const productsSlice = createSlice({
       state.pagination.page = action.payload
     },
     setPageLimit(state, action){
-      console.log('here?')
       state.pagination.limit = action.payload
       state.pagination.pageCount = Math.ceil(state.pagination.productCount / action.payload)
     },
@@ -61,7 +60,6 @@ export const searchWith = (filters) => {
       const { products: { pagination }} = getState()
       // TODO: cleanup this mess
       const data = await productsService.retrieveProducts({...filters, page: 1, limit: pagination.limit})
-      console.log(data)
       dispatch(setProducts(data.products))
       dispatch(setSearched())
       dispatch(setProductCount(data.productsCount))
@@ -103,7 +101,6 @@ export const changePageLimit = (newLimit) => {
     const { filters } = getState()
     try {
       // In reality, this is bad practice, changing the page limit before confirmation that the new products have been retrieved
-      console.log('here2?')
       dispatch(setPageLimit(newLimit))
       dispatch(searchWith({...filters}))
     } catch (error){

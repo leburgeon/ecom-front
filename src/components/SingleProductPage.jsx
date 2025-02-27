@@ -17,6 +17,7 @@ import { useDispatch, useSelector } from "react-redux";
 import {notify} from '../reducers/notificationReducer'
 import productsService from "../services/productsService";
 import { setBasketCount } from '../reducers/basketReducer'
+import { logout } from "../reducers/userReducer";
 
 const SingleProductPage = () => {
   const navigate = useNavigate();
@@ -80,6 +81,16 @@ const SingleProductPage = () => {
         console.log('Product added to basket! Now in basket:' + data.basketCount + ' unique items')
         dispatch(setBasketCount(data.basketCount))
       } catch (error){
+        let notificationMessage = 'Error adding that to the basket! '
+        if (error.response?.data?.error === "TokenExpiredError:jwt expired"){
+          dispatch(logout())
+          navigate('/login')
+          notificationMessage += 'Session expired, please re-login!'
+        }
+        dispatch(notify({
+          message: notificationMessage,
+          severity: 'info'
+        }))
         console.error(error)
       }
     }

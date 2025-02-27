@@ -10,7 +10,7 @@ import {
   Grid2
 } from '@mui/material';
 
-const ProductSearchBar = ({ onSearch = (filters) => {console.log(filters)} }) => {
+const ProductSearchBar = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [category, setCategory] = useState(null); // Changed to single category
   const [priceRange, setPriceRange] = useState([null, null]);
