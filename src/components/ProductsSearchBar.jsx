@@ -1,4 +1,7 @@
 import { useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { searchWith } from '../reducers/productsReducer';
+import { updateFilter } from '../reducers/filtersReducer'
 import {
   Box,
   TextField,
@@ -15,6 +18,7 @@ const ProductSearchBar = () => {
   const [category, setCategory] = useState(null); // Changed to single category
   const [priceRange, setPriceRange] = useState([null, null]);
   const [inStockOnly, setInStockOnly] = useState(false);
+  const dispatch = useDispatch()
 
   // Example category options
   const categoryOptions = [
@@ -25,13 +29,15 @@ const ProductSearchBar = () => {
   ];
 
   const handleSearch = () => {
-    onSearch({
+    const filters = {
       query: searchQuery,
       category: category ? category.value : null, // Changed to single category
       minPrice: priceRange[0],
       maxPrice: priceRange[1],
       inStockOnly,
-    });
+    }
+    dispatch(searchWith(filters))
+    dispatch(updateFilter(filters))
   };
 
   return (

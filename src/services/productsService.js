@@ -33,4 +33,4 @@ const removeItemFromBasket = async (productId, quantity) => {
   return response.data
 }
 
-export default {retrieveProducts, getPageOf, getProduct, addProductToBasket}
+export default {retrieveProducts, getPageOf, getProduct, addProductToBasket, removeItemFromBasket}
