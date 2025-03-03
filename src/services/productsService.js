@@ -28,9 +28,19 @@ const addProductToBasket = async (productId, quantity) => {
   return response.data
 }
 
-const removeItemFromBasket = async (productId, quantity) => {
-  const response = await axios.post(baseUrl + '/api/basket/remove', {productId, quantity})
+const reduceItemFromBasket = async (productId, quantity) => {
+  const response = await axios.post(baseUrl + '/api/basket/reduce', {productId, quantity})
   return response.data
 }
 
-export default {retrieveProducts, getPageOf, getProduct, addProductToBasket, removeItemFromBasket}
+const deleteItemFromBasket = async (productId) => {
+  const response = await axios.delete(baseUrl + '/api/basket/' + productId)
+  return response.data
+}
+
+const getBasket = async () => {
+  const response = await axios.get(baseUrl + '/api/basket')
+  return response.data
+}
+
+export default {retrieveProducts, getPageOf, getProduct, addProductToBasket, reduceItemFromBasket, deleteItemFromBasket, getBasket}

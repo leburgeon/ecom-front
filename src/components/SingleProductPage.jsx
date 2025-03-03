@@ -162,6 +162,18 @@ const SingleProductPage = () => {
             >
               Add to Basket
             </Button>
+            <Button onClick={async()=>{
+              const response = await productService.reduceItemFromBasket(id, 1)
+              console.log(response)
+            }}>
+              Test remove
+            </Button>
+            <Button onClick={async() => {
+              const response = await productService.deleteItemFromBasket(id)
+              console.log(response)
+            }}>
+              Test Delete
+            </Button>
           </span>
         </Tooltip>
       </Box>
