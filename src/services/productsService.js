@@ -40,6 +40,7 @@ const deleteItemFromBasket = async (productId) => {
 
 const getBasket = async () => {
   const response = await axios.get(baseUrl + '/api/basket')
+  console.log(response.data)
   return response.data
 }
 
