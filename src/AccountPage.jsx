@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Button, Container, Typography, Card, CardContent, CircularProgress, List, ListItem, ListItemText } from "@mui/material";
+import { Button, Container, Typography, Card, CardContent, CircularProgress, List, ListItem, ListItemText, LinearProgress } from "@mui/material";
 import { logout } from './reducers/userReducer'
 import { notify } from './reducers/notificationReducer'
 import orderService from './services/orderService'
@@ -34,6 +34,10 @@ const AccountPage = () => {
     };
     fetchOrders();
   }, []);
+
+  if (loading){
+    return (<LinearProgress></LinearProgress>)
+  }
 
   return (
     <Container maxWidth="sm" sx={{ mt: 4 }}>
