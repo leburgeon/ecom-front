@@ -26,6 +26,13 @@ const ProductSearchBar = () => {
     { label: 'Clothing', value: 'clothing' },
     { label: 'Books', value: 'books' },
     { label: 'Home', value: 'home' },
+    { label: 'Audio', value: 'audio' },
+    { label: 'Gaming', value: 'gaming' },
+    { label: 'Home & Kitchen', value: 'home & kitchen' },
+    { label: 'Home Automation', value: 'home automation' },
+    { label: 'Computers', value: 'computers' },
+    { label: 'Outdoor', value: 'outdoor' },
+    { label: 'Wearables', value: 'wearables' }
   ];
 
   const handleSearch = () => {

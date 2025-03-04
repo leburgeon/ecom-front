@@ -81,6 +81,7 @@ export const goToPage = (newPage) => {
       const data = await productsService.getPageOf({...filters, page: newPage, limit: pagination.limit})
       dispatch(setProducts(data))
       dispatch(setPage(newPage))
+      window.scrollTo(0,0)
     } catch (error) {
       console.error(error)
       dispatch(notify({
