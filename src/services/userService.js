@@ -1,5 +1,4 @@
 import axios from "axios";
-import { baseUrl } from "./utils";
 
 // Sets the global authorisation token for requests in this module
 const setAuthToken = (token) => {
@@ -31,13 +30,13 @@ const getFromLocalSync = () => {
 // For logging using credentials
 const login = async (credentials) => {
   const { email, password } = credentials
-  const response = await axios.post(baseUrl + '/api/login', {email, password})
+  const response = await axios.post('/api/login', {email, password})
   return response.data
 }
 
 const registerNewUser = async (credentials) => {
   const { name, email, password } = credentials
-  const response = await axios.post(baseUrl + '/api/users', {name, email, password})
+  const response = await axios.post('/api/users', {name, email, password})
   return response.data
 }
 
