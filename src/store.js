@@ -4,6 +4,7 @@ import userReducer from './reducers/userReducer'
 import productsReducer from './reducers/productsReducer'
 import filterReducer from './reducers/filtersReducer'
 import basketReducer from './reducers/basketReducer'
+import checkoutReducer from './reducers/checkoutReducer'
 
 const store = configureStore({
   reducer: {
@@ -11,7 +12,8 @@ const store = configureStore({
     user: userReducer,
     products: productsReducer,
     filters: filterReducer,
-    basket: basketReducer
+    basket: basketReducer,
+    checkout: checkoutReducer
   }
 })
 

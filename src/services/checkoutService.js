@@ -1,7 +1,7 @@
 import axios from 'axios'
 
-const checkout = async () => {
-  const response = axios.get('/api/checkout')
+const checkout = async (basket) => {
+  const response = await axios.post('/api/orders/checkout', basket)
   return response.data
 }
 

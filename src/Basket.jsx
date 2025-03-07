@@ -7,9 +7,12 @@ import BasketCard from "./components/BasketCard";
 import { logout } from './reducers/userReducer'
 import { notify } from "./reducers/notificationReducer";
 import checkoutService from './services/checkoutService'
+import { setCheckout } from "./reducers/checkoutReducer";
+import { useNavigate } from "react-router-dom";
 
 const Basket = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate()
   const basketItems = useSelector((store) => store.basket.items);
   const [loading, setLoading] = useState(true);
 
@@ -44,9 +47,19 @@ const Basket = () => {
   }
 
   const handleCheckout = async () => {
-    // try {
-    //   const data = await checkoutService.checkout()
-    // }
+    const basket = basketItems.map(item => {
+      return {
+        id: item.product.id, quantity: item.quantity
+      }
+    })
+    try {
+      const response = await checkoutService.checkout(basket)
+      dispatch(setCheckout(response))
+      navigate('/checkout')
+    } catch (error){
+      // TODO handle products out of stock error
+      console.error(error)
+    }
   }
 
   const totalCost = basketItems.reduce((sum, item) => sum + item.product.price * item.quantity, 0).toFixed(2);
@@ -65,7 +78,7 @@ const Basket = () => {
             />
           ))}
           <Typography variant="h5" sx={{ mt: 2 }}>Total: £{totalCost}</Typography>
-          <Button variant="contained">Checkout</Button>
+          <Button onClick={handleCheckout} variant="contained">Checkout</Button>
         </>
       )}
     </Paper>
