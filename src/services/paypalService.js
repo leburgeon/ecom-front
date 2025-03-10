@@ -5,9 +5,16 @@ import { PAYPALCLIENTID } from "./utils"
 // It is requesting an order id from the merchant server so that it can instantiate a popup to confirm payment
 // Takes a cart object containing an array of product ids and quantities
 const createOrder = async (cart, notify) => {
+  // Formats the cart into the required format
+  const formattedCart = cart.map(item => {
+    return {
+      id: item.product.id,
+      quantity: item.quantity
+    }
+  })
   try {
     // Attempts to create an order on the backend
-    const { data } = await axios.post('/api/orders', {cart})
+    const { data } = await axios.post('/api/orders', formattedCart)
     if (data.id){
       return data.id
     } else {
@@ -28,7 +35,7 @@ const createOrder = async (cart, notify) => {
 }
 
 // After the user has approved the payment, this callback makes a call to the merchant server to capture the payment
-const onApprove = async (data, actions, notify) => {
+const onApprove = async (data, actions, notify, cart) => {
   try {
     const { orderData } = await axios.post(`/api/orders/capture/${data.orderID}`)
 
@@ -36,7 +43,7 @@ const onApprove = async (data, actions, notify) => {
     const errorDetail = orderData?.details?.[0]
 
     // Recoverable instrument declined- retry capture
-    if (errorDetail?.issue === 'INTRUMENT_DECLINED'){
+    if (errorDetail?.issue === 'INSTRUMENT_DECLINED'){
       return actions.restart()
     // Non-recoverable
     } else if (errorDetail){
@@ -61,8 +68,10 @@ const onApprove = async (data, actions, notify) => {
 }
 
 const paypalInitialOptions = {
-  'clientId': PAYPALCLIENTID
-
+  'clientId': PAYPALCLIENTID,
+  'buyer-country': 'GB',
+  currency: 'GBP',
+  components: 'buttons'
 }
 
 export default {createOrder, onApprove, paypalInitialOptions}
