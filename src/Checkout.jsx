@@ -52,8 +52,17 @@ const Checkout = () => {
         </Card>
         <Box sx={{ mt: 3 }}>
           <PayPalButtons
-            createOrder={() => paypalService.createOrder(checkout.basket, dispatchNotify)}
-            onApprove={(data, actions) => paypalService.onApprove(data, actions, dispatchNotify)}
+            debug={true}
+            createOrder={async () => {
+              const id = await paypalService.createOrder(checkout.basket, dispatchNotify)
+              return id
+            }}
+            onApprove={async (data, actions) => {
+              await paypalService.onApprove(data, actions, dispatchNotify)
+            }}
+            onError={(err) => console.error("PayPal SDK Error:", err)}
+            onCancel={(data) => console.warn("Payment cancelled:", data)}
+            onClick={() => console.log("PayPal button clicked")}
             style={{ shape: "pill", layout: "vertical", color: "blue", label: "pay" }}
           />
         </Box>

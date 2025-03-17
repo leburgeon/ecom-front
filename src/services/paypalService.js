@@ -35,9 +35,9 @@ const createOrder = async (cart, notify) => {
 }
 
 // After the user has approved the payment, this callback makes a call to the merchant server to capture the payment
-const onApprove = async (data, actions, notify, cart) => {
+const onApprove = async (data, actions, notify ) => {
   try {
-    const { orderData } = await axios.post(`/api/orders/capture/${data.orderID}`)
+    const { data: orderData } = await axios.post(`/api/orders/capture/${data.orderID}`)
 
     // Attempts handle error cases, recoverable and non-recoverable
     const errorDetail = orderData?.details?.[0]
@@ -48,10 +48,13 @@ const onApprove = async (data, actions, notify, cart) => {
     // Non-recoverable
     } else if (errorDetail){
       throw new Error(`${errorDetail.description} (${orderData.debug_id})`)
+      
+    } else if (!orderData.purchase_units){
+      throw new Error(JSON.stringify(orderData))
       // Handles SUCCESS
     } else {
       const transaction = orderData.purchase_units[0].payments.captures[0]
-      console.log(transaction)
+      console.log(JSON.stringify(transaction))
       notify({
         message: `Purchase successfull!!:`,
         severity: 'success'
