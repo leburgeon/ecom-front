@@ -47,16 +47,17 @@ const onApprove = async (data, actions, notify ) => {
       return actions.restart()
     // Non-recoverable
     } else if (errorDetail){
-      throw new Error(`${errorDetail.description} (${orderData.debug_id})`)
-      
-    } else if (!orderData.purchase_units){
-      throw new Error(JSON.stringify(orderData))
+      handleRelease(data.orderID)
+      notify({
+        message: 'Purchase failed, please try again.',
+        severity: 'info'
+      })
       // Handles SUCCESS
     } else {
       const transaction = orderData.purchase_units[0].payments.captures[0]
       console.log(JSON.stringify(transaction))
       notify({
-        message: `Purchase successfull!!:`,
+        message: `Purchase successfull! Thank you for your order!`,
         severity: 'success'
       })
     }
@@ -70,6 +71,10 @@ const onApprove = async (data, actions, notify ) => {
   }
 }
 
+const handleRelease = async (orderId) => {
+  axios.post(`/api/orders/release/${orderId}`)
+}
+
 const paypalInitialOptions = {
   'clientId': PAYPALCLIENTID,
   'buyer-country': 'GB',
@@ -77,4 +82,4 @@ const paypalInitialOptions = {
   components: 'buttons'
 }
 
-export default {createOrder, onApprove, paypalInitialOptions}
+export default {createOrder, onApprove, paypalInitialOptions, handleRelease}

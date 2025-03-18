@@ -4,10 +4,12 @@ import paypalService from "./services/paypalService";
 import { useDispatch, useSelector } from "react-redux";
 import { notify } from "./reducers/notificationReducer";
 import { Navigate } from "react-router-dom";
+import { useState } from "react";
 
 const Checkout = () => {
   const dispatch = useDispatch();
   const checkout = useSelector((store) => store.checkout);
+  const [tempOrderId, setTempOrderId] = useState(null)
 
   if (!checkout || checkout.basket.length === 0) {
     return <Navigate to='/basket'/>
@@ -55,13 +57,23 @@ const Checkout = () => {
             debug={true}
             createOrder={async () => {
               const id = await paypalService.createOrder(checkout.basket, dispatchNotify)
+              setTempOrderId(id)
               return id
             }}
             onApprove={async (data, actions) => {
               await paypalService.onApprove(data, actions, dispatchNotify)
+              setTempOrderId(null)
             }}
-            onError={(err) => console.error("PayPal SDK Error:", err)}
-            onCancel={(data) => console.warn("Payment cancelled:", data)}
+            onError={(err) => {
+              console.error("PayPal SDK Error:", err)
+              if (tempOrderId){
+                paypalService.handleRelease(tempOrderId)
+              }
+            }}
+            onCancel={(data) => {
+              console.warn("Payment cancelled:", data)
+              paypalService.handleRelease(data.orderId)
+            }}
             onClick={() => console.log("PayPal button clicked")}
             style={{ shape: "pill", layout: "vertical", color: "blue", label: "pay" }}
           />
