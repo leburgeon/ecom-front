@@ -1,15 +1,17 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Button, Container, Typography, Card, CardContent, CircularProgress, List, ListItem, ListItemText, LinearProgress } from "@mui/material";
-import { logout } from './reducers/userReducer'
-import { notify } from './reducers/notificationReducer'
-import orderService from './services/orderService'
+import { Button, Container, Typography, Card, CardContent, List, ListItem, ListItemText, LinearProgress, Collapse, IconButton, Paper } from "@mui/material";
+import { ExpandMore, ExpandLess } from '@mui/icons-material'; // New icons for expanding/collapsing
+import { logout } from './reducers/userReducer';
+import { notify } from './reducers/notificationReducer';
+import orderService from './services/orderService';
 
 const AccountPage = () => {
   
   const { name, email } = useSelector((store) => store.user);
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [openOrders, setOpenOrders] = useState(false);  // State to control collapse of orders section
 
   const dispatch = useDispatch()
 
@@ -18,6 +20,7 @@ const AccountPage = () => {
       try {
         const data = await orderService.getOrdersForUser()
         setOrders(data);
+        console.log(data[0])
       } catch (error) {
         let errorMessage = 'Error fetching orders:'
         if (error.response.status === 401){
@@ -39,6 +42,10 @@ const AccountPage = () => {
     return (<LinearProgress></LinearProgress>)
   }
 
+  const handleToggle = () => {
+    setOpenOrders(prevState => !prevState);
+  };
+
   return (
     <Container maxWidth="sm" sx={{ mt: 4 }}>
       <Card>
@@ -56,20 +63,59 @@ const AccountPage = () => {
           >
             Logout
           </Button>
-          <Typography variant="h6" sx={{ mt: 2 }}>Previous Orders</Typography>
-          {loading ? (
-            <CircularProgress sx={{ mt: 2 }} />
-          ) : orders.length > 0 ? (
-            <List>
-              {orders.map((order, index) => (
-                <ListItem key={index}>
-                  <ListItemText primary={`Order #${order.id}`} secondary={order.date} />
-                </ListItem>
-              ))}
-            </List>
-          ) : (
-            <Typography>No previous orders.</Typography>
-          )}
+          <div>
+            {orders.length > 0 ? (
+              <Card>
+                <CardContent>
+                  <div
+                    onClick={handleToggle}
+                    style={{
+                      cursor: 'pointer',
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      alignItems: 'center',
+                    }}
+                  >
+                    <Typography variant="h6">Previous Orders</Typography>
+                    <IconButton>
+                      {openOrders ? <ExpandLess /> : <ExpandMore />}
+                    </IconButton>
+                  </div>
+                  <Collapse in={openOrders} timeout="auto" unmountOnExit>
+                    <List>
+                      {orders.map(({ id, items, orderNumber, status, totalCost, createdAt }) => (
+                        <Paper elevation={3} sx={{ mb: 2, p: 2 }} key={id}>
+                          <ListItem sx={{ flexDirection: 'column', alignItems: 'flex-start' }}>
+                            <List sx={{ mt: 1 }}>
+                              {items.map(({ name, price, quantity }) => (
+                                <ListItem key={`${id}-${name}`} sx={{ pl: 2 }}>
+                                  <ListItemText
+                                    primary={`${name} (x${quantity})`}
+                                    secondary={`$${price}`}
+                                  />
+                                </ListItem>
+                              ))}
+                            </List>
+                            <Typography variant="body1" sx={{ mt: 1 }}>
+                              <strong>Status:</strong> {status}
+                            </Typography>
+                            <Typography variant="body1">
+                              <strong>Total:</strong> ${totalCost.value}
+                            </Typography>
+                            <Typography variant="body1">
+                              <strong>Order Number:</strong> {orderNumber}
+                            </Typography>
+                          </ListItem>
+                        </Paper>
+                      ))}
+                    </List>
+                  </Collapse>
+                </CardContent>
+              </Card>
+            ) : (
+              <Typography sx={{ mt: 2, textAlign: 'center' }}>No previous orders.</Typography>
+            )}
+          </div>
         </CardContent>
       </Card>
     </Container>
