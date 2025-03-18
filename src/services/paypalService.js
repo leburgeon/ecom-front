@@ -35,7 +35,7 @@ const createOrder = async (cart, notify) => {
 }
 
 // After the user has approved the payment, this callback makes a call to the merchant server to capture the payment
-const onApprove = async (data, actions, notify ) => {
+const onApprove = async (data, actions, notify, handleSuccess ) => {
   try {
     const { data: orderData } = await axios.post(`/api/orders/capture/${data.orderID}`)
 
@@ -56,10 +56,8 @@ const onApprove = async (data, actions, notify ) => {
     } else {
       const transaction = orderData.purchase_units[0].payments.captures[0]
       console.log(JSON.stringify(transaction))
-      notify({
-        message: `Purchase successfull! Thank you for your order!`,
-        severity: 'success'
-      })
+      const { orderNumber } = orderData
+      handleSuccess(orderNumber)
     }
 
   } catch (error){

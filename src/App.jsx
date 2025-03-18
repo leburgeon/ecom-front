@@ -10,6 +10,7 @@ import RegisterPage from "./RegisterPage"
 import AccountPage from './AccountPage'
 import SingleProductPage from "./components/SingleProductPage"
 import Checkout from "./Checkout"
+import OrderSuccessPage from './OrderSuccessPage'
 
 function App() {
   const notifications = useSelector(store => store.notifications)
@@ -28,6 +29,7 @@ function App() {
         <Route path='/account' element={user ? <AccountPage/> : <Navigate to='/login'/>}/>
         <Route path='/product/:id' element={<SingleProductPage/>}/>
         <Route path='/checkout' element={<Checkout></Checkout>}/>
+        <Route path='/success/:orderNumber' element={<OrderSuccessPage/>}/>
       </Routes>
     </>
   )

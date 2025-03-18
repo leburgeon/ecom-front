@@ -3,11 +3,15 @@ import { PayPalButtons } from "@paypal/react-paypal-js";
 import paypalService from "./services/paypalService";
 import { useDispatch, useSelector } from "react-redux";
 import { notify } from "./reducers/notificationReducer";
-import { Navigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 import { useState } from "react";
+import { resetBasket } from "./reducers/basketReducer";
+
+
 
 const Checkout = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate()
   const checkout = useSelector((store) => store.checkout);
   const [tempOrderId, setTempOrderId] = useState(null)
 
@@ -18,6 +22,17 @@ const Checkout = () => {
   const dispatchNotify = (obj) => {
     dispatch(notify(obj));
   };
+
+  const handleSuccess = (orderNumber) => {
+    setTempOrderId(null)
+    dispatch(resetBasket())
+    dispatch(notify({
+      message:'Order complete! Thank you for your order!',
+      severity: 'success'
+    }))
+    navigate(`/success/${orderNumber}`)
+  }
+
 
   return (
     <Container maxWidth="sm">
@@ -61,8 +76,7 @@ const Checkout = () => {
               return id
             }}
             onApprove={async (data, actions) => {
-              await paypalService.onApprove(data, actions, dispatchNotify)
-              setTempOrderId(null)
+              await paypalService.onApprove(data, actions, dispatchNotify, handleSuccess)
             }}
             onError={(err) => {
               console.error("PayPal SDK Error:", err)
