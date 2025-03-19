@@ -1,50 +1,56 @@
-import { useEffect, useState } from "react";
-import { useSelector, useDispatch } from "react-redux";
-import { setBasketCount, setBasketItems } from "./reducers/basketReducer";
-import productService from "./services/productsService";
-import { Typography, Paper, LinearProgress, Button } from "@mui/material";
-import BasketCard from "./components/BasketCard";
+import { useEffect, useState } from "react"
+import { useSelector, useDispatch } from "react-redux"
+import { updateStockOfItems, setBasketCount, setBasketItems } from "./reducers/basketReducer"
+import productService from "./services/productsService"
+import { Typography, Paper, LinearProgress, Button, Alert } from "@mui/material"
+import BasketCard from "./components/BasketCard"
 import { logout } from './reducers/userReducer'
-import { notify } from "./reducers/notificationReducer";
+import { notify } from "./reducers/notificationReducer"
 import checkoutService from './services/checkoutService'
-import { setCheckout } from "./reducers/checkoutReducer";
-import { useNavigate } from "react-router-dom";
+import { setCheckout } from "./reducers/checkoutReducer"
+import { useNavigate } from "react-router-dom"
 
 const Basket = () => {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch()
   const navigate = useNavigate()
-  const basketItems = useSelector((store) => store.basket.items);
-  const [loading, setLoading] = useState(true);
+  const basketItems = useSelector((store) => store.basket.items)
+  const [loading, setLoading] = useState(true)
 
   const fetchBasket = async () => {
     try {
       const { basket } = await productService.getBasket();
       if (basket) {
-        dispatch(setBasketItems(basket));
-        dispatch(setBasketCount(basket.length));
+        dispatch(setBasketItems(basket))
+        dispatch(setBasketCount(basket.length))
       }
     } catch (error) {
-      let errorMessage = 'Error fetching orders:';
+      let errorMessage = 'Error fetching basket:'
       if (error.response.status === 401) {
-        dispatch(logout());
-        errorMessage += 'Authentication token expired, please re-login';
+        dispatch(logout())
+        errorMessage += 'Authentication token expired, please re-login'
       }
       dispatch(notify({
         message: `${errorMessage}`,
         severity: 'info'
-      }));
+      }))
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
   };
 
   useEffect(() => {
-    fetchBasket();
-  }, []);
+    fetchBasket()
+  }, [])
 
   if (loading) {
-    return (<LinearProgress></LinearProgress>);
+    return (<LinearProgress></LinearProgress>)
   }
+
+  const totalCost = basketItems.reduce((sum, item) => sum + item.product.price * item.quantity, 0).toFixed(2)
+
+  const stockNotValid = basketItems.some(item => {
+    return item.quantity > item.product.stock
+  })
 
   const handleCheckout = async () => {
     const basket = basketItems.map(item => {
@@ -59,10 +65,17 @@ const Basket = () => {
     } catch (error){
       // TODO handle products out of stock error
       console.error(error)
+      if (error.response?.data?.error === 'Some products out of stock'){
+        dispatch(notify({
+          message: 'There is not enough stock to process some of the items in your basket',
+          severity: 'error'
+        }))
+        dispatch(updateStockOfItems(error.response?.data?.items))
+      }
     }
   }
 
-  const totalCost = basketItems.reduce((sum, item) => sum + item.product.price * item.quantity, 0).toFixed(2);
+  
 
   return (
     <Paper elevation={3} sx={{ p: 2 }}>
@@ -78,11 +91,12 @@ const Basket = () => {
             />
           ))}
           <Typography variant="h5" sx={{ mt: 2 }}>Total: £{totalCost}</Typography>
-          <Button onClick={handleCheckout} variant="contained">Checkout</Button>
+          {stockNotValid? <Alert severity="warning">We are sorry, there is not enough stock available to process all of the items in your basket. Please try removing them or reducing the quantity.</Alert> : ''}
+          <Button style={{marginTop: '5px'}} disabled={stockNotValid} onClick={handleCheckout} variant="contained">Checkout</Button>
         </>
       )}
     </Paper>
-  );
-};
+  )
+}
 
-export default Basket;
+export default Basket

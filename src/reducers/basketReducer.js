@@ -31,10 +31,32 @@ const basketSlice = createSlice({
     },
     removeItem(state, action){
       state.items = state.items.filter(item => item.product.id !== action.payload.id)
+    },
+    // Updates the stock of the values to the latest known value
+    // Action payload is an array of objects with id and quantity
+    updateStockOfItems(state, action){
+      // maps the ids to the quantities
+      const quantities = new Map()
+      for (let obj of action.payload){
+        quantities.set(obj.id, obj.quantity)
+      }
+      // Sets the items array to the mapped array with updated stock values
+      state.items = state.items.map(item => {
+        if (!quantities.has(item.product.id)){
+          return item
+        } else {
+          return {quantity: item.quantity,
+            product: {
+              ...item.product,
+              stock: quantities.get(item.product.id)
+            }
+          }
+        }
+      })
     }
   }
 })
 
-export const {setBasketCount, setBasketItems, resetBasket, incrementQuantityOfItem, removeItem} = basketSlice.actions
+export const {setBasketCount, setBasketItems, resetBasket, incrementQuantityOfItem, removeItem, updateStockOfItems} = basketSlice.actions
 
 export default basketSlice.reducer

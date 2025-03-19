@@ -96,11 +96,11 @@ const AccountPage = () => {
                                 </ListItem>
                               ))}
                             </List>
-                            <Typography variant="body1" sx={{ mt: 1 }}>
-                              <strong>Status:</strong> {status}
-                            </Typography>
                             <Typography variant="body1">
                               <strong>Total:</strong> ${totalCost.value}
+                            </Typography>
+                            <Typography variant="body1" sx={{ mt: 1 }}>
+                              <strong>Status:</strong> {status === 'PAID' ? 'Ready to dispatch' : status}
                             </Typography>
                             <Typography variant="body1">
                               <strong>Order Number:</strong> {orderNumber}

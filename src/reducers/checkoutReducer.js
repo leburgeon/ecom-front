@@ -7,7 +7,7 @@ const checkouSlice = createSlice({
     setCheckout(state, action){
       return action.payload
     },
-    clearCheckout(state, action){
+    clearCheckout(_state, _action){
       return null
     }
   }
