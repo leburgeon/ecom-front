@@ -22,13 +22,8 @@ const getProduct = async (id) => {
   return response.data
 }
 
-const addProductToBasket = async (productId, quantity) => {
-  const response = await axios.post('/api/basket/add', { productId, quantity })
-  return response.data
-}
-
-const reduceItemFromBasket = async (productId, quantity) => {
-  const response = await axios.post('/api/basket/reduce', { productId, quantity })
+const incrementBasketItem = async (productId, quantity) => {
+  const response = await axios.post('/api/basket/increment', {productId, quantity})
   return response.data
 }
 
@@ -43,4 +38,4 @@ const getBasket = async () => {
   return response.data
 }
 
-export default { retrieveProducts, getPageOf, getProduct, addProductToBasket, reduceItemFromBasket, deleteItemFromBasket, getBasket }
+export default { retrieveProducts, getPageOf, getProduct, incrementBasketItem, deleteItemFromBasket, getBasket }

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import { useSelector, useDispatch } from "react-redux"
-import { updateStockOfItems, setBasketCount, setBasketItems } from "./reducers/basketReducer"
+import { updateStockOnBasketItems, setBasketCount, setBasketItems } from "./reducers/basketReducer"
 import productService from "./services/productsService"
 import { Typography, Paper, LinearProgress, Button, Alert } from "@mui/material"
 import BasketCard from "./components/BasketCard"
@@ -65,12 +65,12 @@ const Basket = () => {
     } catch (error){
       // TODO handle products out of stock error
       console.error(error)
-      if (error.response?.data?.error === 'Some products out of stock'){
+      if (error.response?.data?.error === 'Not enough stock'){
         dispatch(notify({
           message: 'There is not enough stock to process some of the items in your basket',
           severity: 'error'
         }))
-        dispatch(updateStockOfItems(error.response?.data?.items))
+        dispatch(updateStockOnBasketItems(error.response?.data?.items))
       }
     }
   }

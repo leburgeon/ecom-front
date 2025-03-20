@@ -27,7 +27,9 @@ const SingleProductPage = () => {
   const [product, setProduct] = useState(null);
   const [notFound, setNotFound] = useState(false);
   const [descExpanded, setDescExpanded] = useState(false);
+  const [isAdding, setIsAdding] = useState(false)
   const user = useSelector(store => store.user)
+  const [inBasketOfItem, setInBasketOfItem] = useState(0)
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -64,8 +66,9 @@ const SingleProductPage = () => {
   }
 
   // Compute the average rating (if count is 0, average is 0)
-  const averageRating =
-    product.rating.count > 0 ? product.rating.total / product.rating.count : 0;
+  const averageRating = product.rating.count > 0 
+    ? product.rating.total / product.rating.count 
+    : 0;
 
   const handleAddToBasket = async () => {
     // Logic to add the product to the basket
@@ -76,22 +79,35 @@ const SingleProductPage = () => {
         severity: 'info'
       }))
     } else {
+      setIsAdding(true)
       try {
-        const data = await productsService.addProductToBasket(product.id, 1)
-        console.log('Product added to basket! Now in basket:' + data.basketCount + ' unique items')
+        const data = await productsService.incrementBasketItem(product.id, 1)
+        console.log(data)
+        setInBasketOfItem(data.inBasket)
         dispatch(setBasketCount(data.basketCount))
       } catch (error){
-        let notificationMessage = 'Error adding that to the basket! '
-        if (error.response?.data?.error === "TokenExpiredError:jwt expired"){
-          dispatch(logout())
-          navigate('/login')
-          notificationMessage += 'Session expired, please re-login!'
+        console.log(error)
+        // handling stock error
+        if (error.response?.data?.error.includes('Not enough stock')){
+          // Updates the stock on the product
+          const latestStock = error.response.data.items[0].quantity
+          setInBasketOfItem(latestStock)
+          console.log('Not enough stock, adjusting stock of current product to :', latestStock)
+          setProduct({...product, stock: latestStock})
+        } else {
+          let notificationMessage = 'Error adding that to the basket! '
+          if (error.response?.data?.error === "TokenExpiredError:jwt expired"){
+            dispatch(logout())
+            navigate('/login')
+            notificationMessage += 'Session expired, please re-login!'
+          }
+          dispatch(notify({
+            message: notificationMessage,
+            severity: 'info'
+          }))
         }
-        dispatch(notify({
-          message: notificationMessage,
-          severity: 'info'
-        }))
-        console.error(error)
+      } finally{
+        setIsAdding(false)
       }
     }
     
@@ -152,27 +168,19 @@ const SingleProductPage = () => {
 
       {/* Add to Basket Button */}
       <Box sx={{ mt: 3 }}>
-        <Tooltip title={product.stock <= 0 ? "Out of stock" : ""}>
+        <Tooltip title={product.stock <= 0 
+          ? 'OUT OF STOCK'
+          : product.stock <= inBasketOfItem
+            ? 'LAST ONE CURRENTLY IN YOUR BASKET!'
+            : ''}>
           <span>
             <Button
               variant="contained"
               color="primary"
               onClick={handleAddToBasket}
-              disabled={product.stock <= 0}
+              disabled={isAdding || product.stock <= inBasketOfItem}
             >
               Add to Basket
-            </Button>
-            <Button onClick={async()=>{
-              const response = await productService.reduceItemFromBasket(id, 1)
-              console.log(response)
-            }}>
-              Test remove
-            </Button>
-            <Button onClick={async() => {
-              const response = await productService.deleteItemFromBasket(id)
-              console.log(response)
-            }}>
-              Test Delete
             </Button>
           </span>
         </Tooltip>

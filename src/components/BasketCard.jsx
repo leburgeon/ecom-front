@@ -1,9 +1,10 @@
 import { useState } from "react";
 import { useDispatch } from "react-redux";
-import { incrementQuantityOfItem, removeItem, setBasketCount} from "../reducers/basketReducer";
+import { incrementQuantityOfItem, removeItem, setBasketCount, updateStockOnBasketItems} from "../reducers/basketReducer";
 import productService from "../services/productsService";
 import { Card, CardContent, CardMedia, IconButton, Typography, Box, CircularProgress, Tooltip } from "@mui/material";
 import { Add, Remove, Delete } from "@mui/icons-material";
+
 
 const BasketCard = ({ item, handleNotify }) => {
   const { product, quantity } = item;
@@ -13,39 +14,28 @@ const BasketCard = ({ item, handleNotify }) => {
   const invalidStock = product.stock < quantity
   const maxStock = product.stock === quantity
 
-  const handleIncrease = async (id) => {
+  const handleIncrement = async (id, quantity) => {
     if (isProcessing) return;
     setIsProcessing(true);
-    try{
-      const data = await productService.addProductToBasket(id, 1)
+    try {
+      const data = await productService.incrementBasketItem(id, quantity)
       dispatch(setBasketCount(data.basketCount))
-      dispatch(incrementQuantityOfItem({id, quantity: 1}))
+      dispatch(incrementQuantityOfItem({id, quantity}))
     } catch (error){
+      if (error.response?.data?.error?.includes('Not enough stock')){
+        dispatch(updateStockOnBasketItems(error.response.data.items))
+      }
+      const notificationMessage = quantity < 0
+        ? 'Sorry we could not remove that item from your basket!'
+        : 'Sorry we could not add that item to the basket!'
       handleNotify({
-        message: "We are having trouble adding that item to the basket",
-        severity: "info"
+        message: notificationMessage,
+        severity: 'info'
       })
     } finally{
-      setIsProcessing(false);
+      setIsProcessing(false)
     }
-  };
-
-  const handleDecrease = async (id) => {
-    if (isProcessing) return;
-    setIsProcessing(true);
-    try{
-      const data = await productService.reduceItemFromBasket(id, 1)
-      dispatch(setBasketCount(data.basketCount))
-      dispatch(incrementQuantityOfItem({id, quantity: -1}))
-    } catch (error){
-      handleNotify({
-        message: "We are having trouble removing that from your basket",
-        severity: "info"
-      })
-    } finally{
-      setIsProcessing(false);
-    }
-  };
+  }
 
   const handleDelete = async (id) => {
     if (isProcessing) return;
@@ -71,10 +61,10 @@ const BasketCard = ({ item, handleNotify }) => {
         <CardContent sx={{ flexGrow: 1, display: "flex", flexDirection: "column" }}>
           <Typography variant="h6">{product.name}</Typography>
           <Box sx={{ display: "flex", alignItems: "center" }}>
-            <IconButton disabled={isProcessing} onClick={() => handleDecrease(product.id)}><Remove /></IconButton>
+            <IconButton disabled={isProcessing} onClick={() => handleIncrement(product.id, -1)}><Remove /></IconButton>
             <Typography>{isProcessing ? <CircularProgress size={15}/> : quantity}</Typography>
             <Tooltip title={maxStock ? `ONLY ${item.product.stock} LEFT!` : ''}>
-              <span><IconButton disabled={isProcessing || quantity >= product.stock} onClick={() => handleIncrease(product.id)}><Add /></IconButton></span>
+              <span><IconButton disabled={isProcessing || quantity >= product.stock} onClick={() => handleIncrement(product.id, 1)}><Add /></IconButton></span>
             </Tooltip>
             <IconButton disabled={isProcessing} onClick={() => handleDelete(product.id)}><Delete /></IconButton>
           </Box>

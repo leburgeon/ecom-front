@@ -11,10 +11,10 @@ import AccountPage from './AccountPage'
 import SingleProductPage from "./components/SingleProductPage"
 import Checkout from "./Checkout"
 import OrderSuccessPage from './OrderSuccessPage'
+import { useEffect } from "react"
 
 function App() {
   const notifications = useSelector(store => store.notifications)
-
   const user = useSelector(store => store.user)
 
   return (

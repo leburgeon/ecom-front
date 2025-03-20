@@ -34,7 +34,7 @@ const basketSlice = createSlice({
     },
     // Updates the stock of the values to the latest known value
     // Action payload is an array of objects with id and quantity
-    updateStockOfItems(state, action){
+    updateStockOnBasketItems(state, action){
       // maps the ids to the quantities
       const quantities = new Map()
       for (let obj of action.payload){
@@ -57,6 +57,6 @@ const basketSlice = createSlice({
   }
 })
 
-export const {setBasketCount, setBasketItems, resetBasket, incrementQuantityOfItem, removeItem, updateStockOfItems} = basketSlice.actions
+export const {setBasketCount, setBasketItems, resetBasket, incrementQuantityOfItem, removeItem, updateStockOnBasketItems} = basketSlice.actions
 
 export default basketSlice.reducer
