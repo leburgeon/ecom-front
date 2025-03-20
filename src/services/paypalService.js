@@ -12,26 +12,19 @@ const createOrder = async (cart, notify) => {
       quantity: item.quantity
     }
   })
-  try {
-    // Attempts to create an order on the backend
-    const { data } = await axios.post('/api/orders', formattedCart)
-    if (data.id){
-      return data.id
-    } else {
-      const errorDetail = data?.details?.[0]
-      const errorMessage = errorDetail 
-        ? `${errorDetail.issue} ${errorDetail.description} (${data.debug_id})`
-        : JSON.stringify(data)
-      throw new Error(errorMessage)
-    }
-
-  } catch (error){
-    console.error(error)
-    notify({
-      message: error.message,
-      severity: 'error'
-    })
+  
+  // Attempts to create an order on the backend
+  const { data } = await axios.post('/api/orders', formattedCart)
+  if (data.id){
+    return data.id
+  } else {
+    const errorDetail = data?.details?.[0]
+    const errorMessage = errorDetail 
+      ? `${errorDetail.issue} ${errorDetail.description} (${data.debug_id})`
+      : JSON.stringify(data)
+    throw new Error(errorMessage)
   }
+
 }
 
 // After the user has approved the payment, this callback makes a call to the merchant server to capture the payment

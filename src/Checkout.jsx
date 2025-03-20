@@ -33,6 +33,20 @@ const Checkout = () => {
     navigate(`/success/${orderNumber}`)
   }
 
+  const handleCreateOrder = async () => {
+    try{
+      const id = await paypalService.createOrder(checkout.basket, dispatchNotify)
+      setTempOrderId(id)
+      return id
+    } catch (error){
+      if (error.response?.data?.error?.includes('Not enough stock')){
+        navigate('/basket')
+      } else {
+        throw error
+      }
+    }
+  }
+
 
   return (
     <Container maxWidth="sm">
@@ -70,11 +84,7 @@ const Checkout = () => {
         <Box sx={{ mt: 3 }}>
           <PayPalButtons
             debug={true}
-            createOrder={async () => {
-              const id = await paypalService.createOrder(checkout.basket, dispatchNotify)
-              setTempOrderId(id)
-              return id
-            }}
+            createOrder={handleCreateOrder}
             onApprove={async (data, actions) => {
               await paypalService.onApprove(data, actions, dispatchNotify, handleSuccess)
             }}
