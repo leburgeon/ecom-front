@@ -76,7 +76,7 @@ const AccountPage = () => {
                       alignItems: 'center',
                     }}
                   >
-                    <Typography variant="h6">Previous Orders</Typography>
+                    <Typography variant="h6">Your Orders</Typography>
                     <IconButton>
                       {openOrders ? <ExpandLess /> : <ExpandMore />}
                     </IconButton>

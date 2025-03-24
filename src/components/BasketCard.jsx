@@ -5,6 +5,7 @@ import productService from "../services/productsService";
 import { Card, CardContent, CardMedia, IconButton, Typography, Box, CircularProgress, Tooltip } from "@mui/material";
 import { Add, Remove, Delete } from "@mui/icons-material";
 import { Link } from "react-router-dom";
+import { notify } from "../reducers/notificationReducer";
 
 
 const BasketCard = ({ item, handleNotify }) => {
@@ -23,16 +24,17 @@ const BasketCard = ({ item, handleNotify }) => {
       dispatch(setBasketCount(data.basketCount))
       dispatch(incrementQuantityOfItem({id, quantity}))
     } catch (error){
+      console.error(error)
       if (error.response?.data?.error?.includes('Not enough stock')){
         dispatch(updateStockOnBasketItems(error.response.data.items))
       }
       const notificationMessage = quantity < 0
         ? 'Sorry we could not remove that item from your basket!'
         : 'Sorry we could not add that item to the basket!'
-      handleNotify({
+      dispatch(notify({
         message: notificationMessage,
         severity: 'info'
-      })
+      }))
     } finally{
       setIsProcessing(false)
     }
