@@ -18,14 +18,20 @@ const ProductCard = ({ id, name, price, firstImage, seller, rating, stock }) => 
   const ratingAverage = rating.total / ratingCount;
 
   return (
-    <Card sx={{ display: 'flex', flexDirection: 'column', width: 250 }}>
+    <Card sx={{ display: 'flex', flexDirection: 'column', width: '100%', maxWidth: 250 }}>
       <CardActionArea onClick={() => {
         navigate(`/product/${id}`);
       }}>
         <CardMedia
           component="img"
-          sx={{ height: 150, width: 'auto', margin: '0 auto' }}
           image={firstImage}
+          alt={name}
+          sx={{
+            width: '100%',
+            aspectRatio: '1 / 1',
+            objectFit: 'contain',
+            backgroundColor: '#f5f5f5'
+          }}
         />
         <CardHeader
           title={name || 'Demo Bike Super Mudder'}

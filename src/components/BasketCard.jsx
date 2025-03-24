@@ -4,6 +4,7 @@ import { incrementQuantityOfItem, removeItem, setBasketCount, updateStockOnBaske
 import productService from "../services/productsService";
 import { Card, CardContent, CardMedia, IconButton, Typography, Box, CircularProgress, Tooltip } from "@mui/material";
 import { Add, Remove, Delete } from "@mui/icons-material";
+import { Link } from "react-router-dom";
 
 
 const BasketCard = ({ item, handleNotify }) => {
@@ -57,9 +58,11 @@ const BasketCard = ({ item, handleNotify }) => {
   return (
     <Card sx={{ display: "flex", alignItems: "center", p: 1, mb: 1, flexDirection: "column" }}>
       <Box sx={{ display: "flex", alignItems: "center", width: "100%" }}>
-        <CardMedia component="img" image={product.firstImage} alt={product.name} sx={{ width: 80, height: 80, mr: 2 }} />
+        <CardMedia component="img" image={product.firstImage} alt={product.name} sx={{
+            aspectRatio: '1 / 1',
+            objectFit: 'contain', width: 80, height: 80, mr: 2 }} />
         <CardContent sx={{ flexGrow: 1, display: "flex", flexDirection: "column" }}>
-          <Typography variant="h6">{product.name}</Typography>
+          <Link to={`/product/${item.product.id}`}><Typography variant="h6">{product.name}</Typography></Link>
           <Box sx={{ display: "flex", alignItems: "center" }}>
             <IconButton disabled={isProcessing} onClick={() => handleIncrement(product.id, -1)}><Remove /></IconButton>
             <Typography>{isProcessing ? <CircularProgress size={15}/> : quantity}</Typography>

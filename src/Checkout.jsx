@@ -35,7 +35,10 @@ const Checkout = () => {
 
   const handleCreateOrder = async () => {
     try{
+      console.log('#################################')
+      console.log(checkout.basket)
       const id = await paypalService.createOrder(checkout.basket, dispatchNotify)
+      
       setTempOrderId(id)
       return id
     } catch (error){

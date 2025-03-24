@@ -114,7 +114,9 @@ const SingleProductPage = () => {
   };
 
   return (
-    <Container sx={{ my: 4 }}>
+    <Container maxWidth={false} sx={{ my: 4,
+      maxWidth: 650
+     }}>
       {/* Product Name */}
       <Typography variant="h4" component="h1" gutterBottom>
         {product.name}
@@ -124,9 +126,18 @@ const SingleProductPage = () => {
       <Card sx={{ mb: 3 }}>
         <CardMedia
           component="img"
-          height="400"
           image={product.firstImage}
           alt={product.name}
+          sx={{
+            width: '100%',
+            aspectRatio: '1 / 1',
+            objectFit: 'contain',
+            backgroundColor: '#f5f5f5',
+            maxWidth: 600,
+            maxHeight: 600,
+            minWidth: 200,
+            minHeight: 200
+          }}
         />
       </Card>
 
@@ -138,9 +149,18 @@ const SingleProductPage = () => {
               <Card>
                 <CardMedia
                   component="img"
-                  height="140"
                   image={imgUrl}
                   alt={`${product.name} ${index + 1}`}
+                  sx={{
+                    width: '100%',
+                    aspectRatio: '1 / 1',
+                    objectFit: 'contain',
+                    backgroundColor: '#f5f5f5',
+                    maxWidth: 200,
+                    maxHeight: 200,
+                    minWidth: 150,
+                    minHeight: 150
+                  }}
                 />
               </Card>
             </Grid>
