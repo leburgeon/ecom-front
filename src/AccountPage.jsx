@@ -19,8 +19,8 @@ const AccountPage = () => {
     const fetchOrders = async () => {
       try {
         const data = await orderService.getOrdersForUser()
-        setOrders(data);
-        console.log(data[0])
+        const ordersSorted = data.sort((a,b) => new Date(b.createdAt) - new Date(a.createdAt))
+        setOrders(ordersSorted)
       } catch (error) {
         let errorMessage = 'Error fetching orders:'
         if (error.response.status === 401){
