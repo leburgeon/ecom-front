@@ -11,8 +11,7 @@ import AccountPage from './AccountPage'
 import SingleProductPage from "./components/SingleProductPage"
 import Checkout from "./Checkout"
 import OrderSuccessPage from './OrderSuccessPage'
-import { useEffect } from "react"
-
+import ProductUploadPage from './ProductUploadPage'
 function App() {
   const notifications = useSelector(store => store.notifications)
   const user = useSelector(store => store.user)
@@ -30,9 +29,14 @@ function App() {
         <Route path='/product/:id' element={<SingleProductPage/>}/>
         <Route path='/checkout' element={<Checkout></Checkout>}/>
         <Route path='/success/:orderNumber' element={<OrderSuccessPage/>}/>
+        <Route path="/product-upload" element={<ProductUploadPage/>}/>
       </Routes>
     </>
   )
 }
 
 export default App
+
+{/* <Route element={<PrivateRoutes/>}>
+  <Route path="/product-upload" element={<ProductUploadPage/>}/>
+</Route> */}

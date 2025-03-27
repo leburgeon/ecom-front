@@ -40,4 +40,14 @@ const registerNewUser = async (credentials) => {
   return response.data
 }
 
-export default {getFromLocalSync, login, registerNewUser, setAuthToken}
+// For checking if the current user is an admin, returns true if so
+const authenticateAdmin = async () => {
+  try {
+    const response = await axios.get('/api/users/admin')
+    return response.status === 200
+  } catch (error){
+    return false
+  }
+}
+
+export default {getFromLocalSync, login, registerNewUser, setAuthToken, authenticateAdmin}

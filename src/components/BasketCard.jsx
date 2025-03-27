@@ -23,6 +23,7 @@ const BasketCard = ({ item, handleNotify }) => {
       const data = await productService.incrementBasketItem(id, quantity)
       dispatch(setBasketCount(data.basketCount))
       dispatch(incrementQuantityOfItem({id, quantity}))
+      dispatch(updateStockOnBasketItems(data.items))
     } catch (error){
       console.error(error)
       if (error.response?.data?.error?.includes('Not enough stock')){

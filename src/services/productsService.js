@@ -38,4 +38,15 @@ const getBasket = async () => {
   return response.data
 }
 
-export default { retrieveProducts, getPageOf, getProduct, incrementBasketItem, deleteItemFromBasket, getBasket }
+// For uploading the information of a new product to the server
+const uploadProduct = async (newProduct) => {
+  // Creates a new form data object and appends the information to it
+  const formData = new FormData()
+  for (let key of Object.keys(newProduct)){
+    formData.append(key, newProduct[key], key)
+  }
+  const response = await axios.post('/api/products', formData)
+  return response
+}
+
+export default { retrieveProducts, getPageOf, getProduct, incrementBasketItem, deleteItemFromBasket, getBasket, uploadProduct }
