@@ -55,7 +55,7 @@ const ProductUploadPage = () => {
         description: description.value,
         seller: seller.value,
         firstImage,
-        categories: JSON.stringify(categories)
+        categories
       }
 
       try{
