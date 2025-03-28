@@ -42,8 +42,15 @@ const getBasket = async () => {
 const uploadProduct = async (newProduct) => {
   // Creates a new form data object and appends the information to it
   const formData = new FormData()
-  for (let key of Object.keys(newProduct)){
-    formData.append(key, newProduct[key], key)
+  for (const [key, value] of Object.entries(newProduct)){
+    // If the field is an array, seperately appends the elements under the key
+    if (Array.isArray(value)){
+      for (const arrayItem of value){
+        formData.append(key, arrayItem)
+      }
+    } else {
+      formData.append(key, value)
+    }
   }
   const response = await axios.post('/api/products', formData)
   return response

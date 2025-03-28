@@ -7,12 +7,12 @@ const ProductUploadPage = () => {
   const name = useControlledValue('a', 'Name')
   const price = useControlledValue(0, 'Price')
   const stock = useControlledValue(0, 'Stock')
-  const description = useControlledValue('a', 'Description')
+  const description = useControlledValue('a descirptionasdfasdfd', 'Description')
   const seller = useControlledValue('a', 'Seller')
   const [firstImage, setFirstImage] = useState(null)
   const [error, setError] = useState(null)
 
-  const categories = []
+  const categories = ['one', 'two']
 
   const handleFirstImageChange = (event) => {
     const selectedFile = event.target.files[0];
@@ -55,7 +55,7 @@ const ProductUploadPage = () => {
         description: description.value,
         seller: seller.value,
         firstImage,
-        categories
+        categories: JSON.stringify(categories)
       }
 
       try{
