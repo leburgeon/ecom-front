@@ -1,18 +1,30 @@
-import { Typography, Paper, TextField, Box, styled, Button, Alert } from "@mui/material"
-import { useControlledValue } from "./services/customHooks"
-import { useState } from "react"
-import productsService from "./services/productsService"
+import { Typography, Paper, TextField, Box, styled, Button, Alert, Chip } from "@mui/material"; // Add Chip for category tiles
+import { useControlledValue } from "./services/customHooks";
+import { useState } from "react";
+import productsService from "./services/productsService";
 
 const ProductUploadPage = () => {
-  const name = useControlledValue('a', 'Name')
-  const price = useControlledValue(0, 'Price')
-  const stock = useControlledValue(0, 'Stock')
-  const description = useControlledValue('a descirptionasdfasdfd', 'Description')
-  const seller = useControlledValue('a', 'Seller')
-  const [firstImage, setFirstImage] = useState(null)
-  const [error, setError] = useState(null)
+  const name = useControlledValue('a', 'Name');
+  const price = useControlledValue(0, 'Price');
+  const stock = useControlledValue(0, 'Stock');
+  const description = useControlledValue('a descirptionasdfasdfd', 'Description');
+  const seller = useControlledValue('a', 'Seller');
+  const [firstImage, setFirstImage] = useState(null);
+  const [error, setError] = useState(null);
 
-  const categories = ['one', 'two']
+  const [categories, setCategories] = useState([]);
+  const [newCategory, setNewCategory] = useState("");
+
+  const handleAddCategory = () => {
+    if (newCategory.trim() && !categories.includes(newCategory.trim())) {
+      setCategories([...categories, newCategory.trim()]);
+      setNewCategory("");
+    }
+  };
+
+  const handleDeleteCategory = (categoryToDelete) => {
+    setCategories(categories.filter((category) => category !== categoryToDelete));
+  };
 
   const handleFirstImageChange = (event) => {
     const selectedFile = event.target.files[0];
@@ -30,7 +42,6 @@ const ProductUploadPage = () => {
     }
   };
 
-  // Hidden input component for the file upload
   const VisuallyHiddenInput = styled('input')({
     clip: 'rect(0 0 0 0)',
     clipPath: 'inset(50%)',
@@ -44,9 +55,9 @@ const ProductUploadPage = () => {
   });
 
   const handleUpload = async (event) => {
-    event.preventDefault()
-    if (!firstImage){
-      setError('Please upload an image')
+    event.preventDefault();
+    if (!firstImage) {
+      setError('Please upload an image');
     } else {
       const newProduct = {
         name: name.value,
@@ -56,37 +67,35 @@ const ProductUploadPage = () => {
         seller: seller.value,
         firstImage,
         categories
-      }
+      };
 
-      try{
-        const response = await productsService.uploadProduct(newProduct)
-        console.log(response)
-      } catch (error){
-        console.error(error)
+      try {
+        const response = await productsService.uploadProduct(newProduct);
+        console.log(response);
+      } catch (error) {
+        console.error(error);
       }
     }
-    
-  }
-  // TODO:
-    // Check how to upload image in react 
-    // Think of how to get categories
+  };
 
   return (
     <Paper
       component='form'
       onSubmit={handleUpload}
-      sx={{backgroundColor: 'bisque', 
-        mt: '40px', 
-        display: 'flex', 
-        flexDirection: 'column', 
+      sx={{
+        backgroundColor: 'bisque',
+        mt: '40px',
+        display: 'flex',
+        flexDirection: 'column',
         alignItems: 'center',
         gap: 2,
         maxWidth: '700px',
-        justifySelf: 'center'}}>
+        justifySelf: 'center'
+      }}
+    >
       {error && <Alert severity="info">{error}</Alert>}
-      <Typography sx={{mt: '10px'}} variant="h5">New Product:</Typography>
-      <Box  sx={{ '& .MuiTextField-root': { m: 1, width: '25ch' }}}>
-
+      <Typography sx={{ mt: '10px' }} variant="h5">New Product:</Typography>
+      <Box sx={{ '& .MuiTextField-root': { m: 1, width: '25ch' } }}>
         <TextField label={name.label} 
           type="text" onChange={name.onChange} 
           value={name.value} 
@@ -105,25 +114,54 @@ const ProductUploadPage = () => {
           onChange={seller.onChange} value={seller.value} 
           required variant="standard"></TextField>
 
-        <TextField sx={{minWidth: '90%'}} multiline 
+        <TextField sx={{ minWidth: '90%' }} multiline 
           label={description.label} onChange={description.onChange} 
           value={description.value} required variant="standard"></TextField>
 
         <Button variant='contained' component='label'
           role={undefined}
           tabIndex={-1}>
-          {!firstImage? 'Upload First Image' : firstImage.name + ' - Uploaded'}
+          {!firstImage ? 'Upload First Image' : firstImage.name + ' - Uploaded'}
           <VisuallyHiddenInput
             type="file"
             onChange={handleFirstImageChange}
-            multiple/>
+            multiple />
         </Button>
-        
       </Box>
-      <Button sx={{mb: '10px'}} variant='contained' color='secondary' type="submit">Upload New Product</Button>
-    </Paper>
-    
-  )
-}
 
-export default ProductUploadPage
+      {/* Categories Input */}
+      <Box sx={{ mt: 3, width: '90%' }}>
+        <Typography variant="h6" gutterBottom>
+          Categories
+        </Typography>
+        <Box display="flex" alignItems="center" gap={1}>
+          <TextField
+            label="New Category"
+            variant="outlined"
+            size="small"
+            value={newCategory}
+            onChange={(e) => setNewCategory(e.target.value)}
+          />
+          <Button variant="contained" color="primary" onClick={handleAddCategory}>
+            Add
+          </Button>
+        </Box>
+        <Box sx={{ mt: 2, display: "flex", flexWrap: "wrap", gap: 1 }}>
+          {categories.map((category) => (
+            <Chip
+              key={category}
+              label={category}
+              onDelete={() => handleDeleteCategory(category)}
+              color="primary"
+              variant="outlined"
+            />
+          ))}
+        </Box>
+      </Box>
+
+      <Button sx={{ mb: '10px' }} variant='contained' color='secondary' type="submit">Upload New Product</Button>
+    </Paper>
+  );
+};
+
+export default ProductUploadPage;
