@@ -47,25 +47,29 @@ const AccountPage = () => {
   };
 
   return (
-    <Container maxWidth="sm" sx={{ mt: 4 }}>
-      <Card>
+    <Container maxWidth="sm" sx={{ mt: 4, mb: 4 }}>
+      <Card sx={{ boxShadow: 3, borderRadius: 2 }}>
         <CardContent>
-          <Typography variant="h5" gutterBottom>
+          <Typography variant="h5" gutterBottom sx={{ fontWeight: 'bold', textAlign: 'center' }}>
             Account
           </Typography>
-          <Typography variant="body1"><strong>Name:</strong> {name}</Typography>
-          <Typography variant="body1"><strong>Email:</strong> {email}</Typography>
+          <Typography variant="body1" sx={{ mt: 2 }}>
+            <strong>Name:</strong> {name}
+          </Typography>
+          <Typography variant="body1" sx={{ mt: 1 }}>
+            <strong>Email:</strong> {email}
+          </Typography>
           <Button 
             variant="contained" 
             color="primary" 
             onClick={() => dispatch(logout())} 
-            sx={{ mt: 2 }}
+            sx={{ mt: 3, width: '100%' }}
           >
             Logout
           </Button>
           <div>
             {orders.length > 0 ? (
-              <Card>
+              <Card sx={{ mt: 4, boxShadow: 2, borderRadius: 2 }}>
                 <CardContent>
                   <div
                     onClick={handleToggle}
@@ -74,19 +78,20 @@ const AccountPage = () => {
                       display: 'flex',
                       justifyContent: 'space-between',
                       alignItems: 'center',
+                      padding: '8px 0',
                     }}
                   >
-                    <Typography variant="h6">Your Orders</Typography>
+                    <Typography variant="h6" sx={{ fontWeight: 'bold' }}>Your Orders</Typography>
                     <IconButton>
                       {openOrders ? <ExpandLess /> : <ExpandMore />}
                     </IconButton>
                   </div>
                   <Collapse in={openOrders} timeout="auto" unmountOnExit>
-                    <List>
+                    <List sx={{ mt: 2 }}>
                       {orders.map(({ id, items, orderNumber, status, totalCost, createdAt }) => (
-                        <Paper elevation={3} sx={{ mb: 2, p: 2 }} key={id}>
+                        <Paper elevation={3} sx={{ mb: 2, p: 2, borderRadius: 2 }} key={id}>
                           <ListItem sx={{ flexDirection: 'column', alignItems: 'flex-start' }}>
-                            <List sx={{ mt: 1 }}>
+                            <List sx={{ mt: 1, width: '100%' }}>
                               {items.map(({ name, price, quantity }) => (
                                 <ListItem key={`${id}-${name}`} sx={{ pl: 2 }}>
                                   <ListItemText
@@ -96,13 +101,13 @@ const AccountPage = () => {
                                 </ListItem>
                               ))}
                             </List>
-                            <Typography variant="body1">
+                            <Typography variant="body1" sx={{ mt: 2 }}>
                               <strong>Total:</strong> ${totalCost.value}
                             </Typography>
                             <Typography variant="body1" sx={{ mt: 1 }}>
                               <strong>Status:</strong> {status === 'PAID' ? 'Ready to dispatch' : status}
                             </Typography>
-                            <Typography variant="body1">
+                            <Typography variant="body1" sx={{ mt: 1 }}>
                               <strong>Order Number:</strong> {orderNumber}
                             </Typography>
                           </ListItem>
@@ -113,7 +118,9 @@ const AccountPage = () => {
                 </CardContent>
               </Card>
             ) : (
-              <Typography sx={{ mt: 2, textAlign: 'center' }}>No previous orders.</Typography>
+              <Typography sx={{ mt: 4, textAlign: 'center', color: 'text.secondary' }}>
+                No previous orders.
+              </Typography>
             )}
           </div>
         </CardContent>

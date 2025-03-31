@@ -7,8 +7,6 @@ import { Navigate, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { resetBasket } from "./reducers/basketReducer";
 
-
-
 const Checkout = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate()
@@ -50,41 +48,42 @@ const Checkout = () => {
     }
   }
 
-
   return (
-    <Container maxWidth="sm">
-      <Paper elevation={3} sx={{ p: 2 }}>
-        <Typography variant="h4" gutterBottom align="center">
+    <Container maxWidth="sm" sx={{mt: '20px'}}>
+      <Paper elevation={4} sx={{ p: 3, borderRadius: 2, backgroundColor: '#f9f9f9' }}>
+        <Typography variant="h4" gutterBottom align="center" sx={{ fontWeight: 'bold', color: '#333' }}>
           Checkout
         </Typography>
-        <Card>
+        <Card sx={{ borderRadius: 2, boxShadow: '0 4px 10px rgba(0, 0, 0, 0.1)' }}>
           <CardContent>
             <List>
               {checkout.basket.map(({ product, quantity }) => (
-                <ListItem key={product.id} sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                <ListItem key={product.id} sx={{ display: 'flex', justifyContent: 'space-between', py: 1 }}>
                   <ListItemText
                     primary={product.name}
                     secondary={`Quantity: ${quantity} - £${product.price.toFixed(2)}`}
+                    primaryTypographyProps={{ fontWeight: 'medium', color: '#555' }}
+                    secondaryTypographyProps={{ color: '#777' }}
                   />
-                  <Typography variant="body1">
+                  <Typography variant="body1" sx={{ fontWeight: 'bold', color: '#333' }}>
                     £{(product.price * quantity).toFixed(2)}
                   </Typography>
                 </ListItem>
               ))}
-              <Divider />
+              <Divider sx={{ my: 2 }} />
               <ListItem sx={{ display: 'flex', justifyContent: 'space-between' }}>
                 <ListItemText
                   primary="Total:"
-                  primaryTypographyProps={{ variant: 'h6', fontWeight: 'bold' }}
+                  primaryTypographyProps={{ variant: 'h6', fontWeight: 'bold', color: '#333' }}
                 />
-                <Typography variant="h5">
+                <Typography variant="h5" sx={{ fontWeight: 'bold', color: '#00796b' }}>
                   £{checkout.totalPrice.toFixed(2)}
                 </Typography>
               </ListItem>
             </List>
           </CardContent>
         </Card>
-        <Box sx={{ mt: 3 }}>
+        <Box sx={{ mt: 4, textAlign: 'center' }}>
           <PayPalButtons
             debug={true}
             createOrder={handleCreateOrder}

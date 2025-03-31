@@ -46,7 +46,11 @@ const uploadProduct = async (newProduct) => {
     // If the field is an array, seperately appends the elements under the key
     if (Array.isArray(value)){
       for (const arrayItem of value){
-        formData.append(key, arrayItem)
+        if (typeof arrayItem === 'string'){
+          formData.append(key, arrayItem.trim().toLowerCase())
+        } else {
+          formData.append(key, arrayItem)
+        }
       }
     } else {
       formData.append(key, value)

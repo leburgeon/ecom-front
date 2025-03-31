@@ -75,24 +75,35 @@ const Basket = () => {
     }
   }
 
-  
-
   return (
-    <Paper elevation={3} sx={{ p: 2 }}>
-      <Typography variant="h4" gutterBottom>Your Basket</Typography>
+    <Paper elevation={3} sx={{ p: 4, maxWidth: 800, margin: '20px auto' }}>
+      <Typography variant="h4" gutterBottom align="center">Your Basket</Typography>
       {basketItems.length === 0 ? (
-        <Typography variant="body1">No items in basket</Typography>
+        <Typography variant="body1" align="center">No items in basket</Typography>
       ) : (
         <>
           {basketItems.map((item) => (
             <BasketCard
               key={item.product.id}
               item={item}
+              sx={{ mb: 2 }}
             />
           ))}
-          <Typography variant="h5" sx={{ mt: 2 }}>Total: £{totalCost}</Typography>
-          {stockNotValid? <Alert severity="warning">We are sorry, there is not enough stock available to process all of the items in your basket. Please try removing them or reducing the quantity.</Alert> : ''}
-          <Button style={{marginTop: '5px'}} disabled={stockNotValid} onClick={handleCheckout} variant="contained">Checkout</Button>
+          <Typography variant="h5" sx={{ mt: 3, textAlign: 'right' }}>Total: £{totalCost}</Typography>
+          {stockNotValid && (
+            <Alert severity="warning" sx={{ mt: 2 }}>
+              We are sorry, there is not enough stock available to process all of the items in your basket. Please try removing them or reducing the quantity.
+            </Alert>
+          )}
+          <Button
+            sx={{ mt: 3, display: 'block', marginLeft: 'auto' }}
+            disabled={stockNotValid}
+            onClick={handleCheckout}
+            variant="contained"
+            color="primary"
+          >
+            Checkout
+          </Button>
         </>
       )}
     </Paper>

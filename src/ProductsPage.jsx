@@ -60,27 +60,57 @@ const ProductsPage = () => {
   const renderSearchSomthing = () => {
     return (
       <Container
-      sx={{
-        display: "flex", // Enables flexbox
-        maxWidth: "80%",
-        flexDirection:"column",
-        alignItems: "center", // Centers children horizontally
-        justifyContent: "center", // Centers children vertically
-        gap: 2,// Adds spacing between children (equivalent to theme.spacing(2))
-      }}
-    >
-      <Typography>Search by category:</Typography>
-      <Container sx={{display: 'grid',
-          width: "100%",
-          gap: 2,
+        sx={{
+          display: "flex",
+          maxWidth: "80%",
+          flexDirection: "column",
+          alignItems: "center",
           justifyContent: "center",
-          gridTemplateColumns: "repeat(auto-fit, minmax(100px, 1fr))"}}>
-        {categoryOptions.map(categoryOption => {
-          return (<Typography  sx={{ textDecoration: 'underline', '&:hover': {color: 'blue'}}} key={categoryOption.value}><a onClick={() => {handleSearchByCategory(categoryOption.value)}}>{categoryOption.label}</a></Typography>)
-        })}
+          gap: 3, // Increased spacing for better layout
+          padding: 4, // Added padding for a cleaner look
+          backgroundColor: "#f9f9f9", // Light background for contrast
+          borderRadius: 2, // Rounded corners for a modern look
+          boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.1)", // Subtle shadow for depth
+        }}
+      >
+        <Typography variant="h5" sx={{ fontWeight: "bold", marginBottom: 2 }}>
+          Search by Category
+        </Typography>
+        <Container
+          sx={{
+            display: "grid",
+            width: "100%",
+            gap: 2,
+            justifyContent: "center",
+            gridTemplateColumns: "repeat(auto-fit, minmax(120px, 1fr))", // Adjusted for better responsiveness
+          }}
+        >
+          {categoryOptions.map((categoryOption) => {
+            return (
+              <Typography
+                key={categoryOption.value}
+                sx={{
+                  textAlign: "center",
+                  textDecoration: "none",
+                  fontWeight: "500",
+                  color: "#333",
+                  cursor: "pointer",
+                  "&:hover": {
+                    color: "#1976d2", // Professional blue hover color
+                    textDecoration: "underline",
+                  },
+                }}
+                onClick={() => {
+                  handleSearchByCategory(categoryOption.value);
+                }}
+              >
+                {categoryOption.label}
+              </Typography>
+            );
+          })}
+        </Container>
       </Container>
-    </Container>
-    )
+    );
   }
 
   return (

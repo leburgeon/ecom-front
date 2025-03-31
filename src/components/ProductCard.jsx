@@ -40,7 +40,7 @@ const ProductCard = ({ id, name, price, firstImage, seller, rating, stock }) => 
       </CardActionArea>
       <CardContent>
         <Typography variant="h5" sx={{ color: 'text.secondary' }}>
-          {`£${price || '199'}`}
+          {`£${price}`}
         </Typography>
         {stock === 0 && (
           <Typography variant="body2" sx={{ color: 'red' }}>

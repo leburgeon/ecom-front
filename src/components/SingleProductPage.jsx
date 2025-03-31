@@ -114,16 +114,14 @@ const SingleProductPage = () => {
   };
 
   return (
-    <Container maxWidth={false} sx={{ my: 4,
-      maxWidth: 650
-     }}>
+    <Container maxWidth="md" sx={{ my: 4, px: 3 }}>
       {/* Product Name */}
-      <Typography variant="h4" component="h1" gutterBottom>
+      <Typography variant="h4" component="h1" gutterBottom sx={{ fontWeight: 'bold', textAlign: 'center' }}>
         {product.name}
       </Typography>
 
       {/* First Image */}
-      <Card sx={{ mb: 3 }}>
+      <Card sx={{ mb: 3, mx: 'auto', boxShadow: 3, borderRadius: 2, overflow: 'hidden', maxWidth: 600 }}>
         <CardMedia
           component="img"
           image={product.firstImage}
@@ -133,10 +131,6 @@ const SingleProductPage = () => {
             aspectRatio: '1 / 1',
             objectFit: 'contain',
             backgroundColor: '#f5f5f5',
-            maxWidth: 600,
-            maxHeight: 600,
-            minWidth: 200,
-            minHeight: 200
           }}
         />
       </Card>
@@ -146,7 +140,7 @@ const SingleProductPage = () => {
         <Grid container spacing={2} sx={{ mb: 3 }}>
           {product.images.map((imgUrl, index) => (
             <Grid item xs={12} sm={6} md={4} key={index}>
-              <Card>
+              <Card sx={{ boxShadow: 2, borderRadius: 2, overflow: 'hidden' }}>
                 <CardMedia
                   component="img"
                   image={imgUrl}
@@ -156,10 +150,6 @@ const SingleProductPage = () => {
                     aspectRatio: '1 / 1',
                     objectFit: 'contain',
                     backgroundColor: '#f5f5f5',
-                    maxWidth: 200,
-                    maxHeight: 200,
-                    minWidth: 150,
-                    minHeight: 150
                   }}
                 />
               </Card>
@@ -169,25 +159,25 @@ const SingleProductPage = () => {
       )}
 
       {/* Seller */}
-      <Typography variant="subtitle1" sx={{ mb: 1 }}>
+      <Typography variant="subtitle1" sx={{ mb: 1, fontWeight: 'medium', color: 'text.secondary' }}>
         Seller: {product.seller}
       </Typography>
 
       {/* Price */}
-      <Typography variant="h6" sx={{ mb: 1 }}>
-        Price: ${product.price}
+      <Typography variant="h5" sx={{ mb: 2, fontWeight: 'bold', color: 'primary.main' }}>
+        Price: £{product.price}
       </Typography>
 
       {/* Rating */}
       <Box sx={{ display: "flex", alignItems: "center", mb: 3 }}>
         <Rating value={averageRating} precision={0.1} readOnly />
-        <Typography variant="body2" sx={{ ml: 1 }}>
+        <Typography variant="body2" sx={{ ml: 1, color: 'text.secondary' }}>
           {averageRating.toFixed(1)} ({product.rating.count} reviews)
         </Typography>
       </Box>
 
       {/* Add to Basket Button */}
-      <Box sx={{ mt: 3 }}>
+      <Box sx={{ mt: 3, textAlign: 'center' }}>
         <Tooltip title={product.stock <= 0 
           ? 'OUT OF STOCK'
           : product.stock <= inBasketOfItem
@@ -199,6 +189,7 @@ const SingleProductPage = () => {
               color="primary"
               onClick={handleAddToBasket}
               disabled={isAdding || product.stock <= inBasketOfItem}
+              sx={{ px: 4, py: 1, fontSize: '1rem', textTransform: 'none' }}
             >
               Add to Basket
             </Button>
@@ -207,17 +198,17 @@ const SingleProductPage = () => {
       </Box>
 
       {/* Collapsible Description */}
-      <Box>
-        <Typography variant="h6" gutterBottom>
+      <Box sx={{ mt: 4 }}>
+        <Typography variant="h6" gutterBottom sx={{ fontWeight: 'bold' }}>
           Description
         </Typography>
         <Collapse in={descExpanded} collapsedSize={100}>
-          <Typography variant="body1" paragraph>
+          <Typography variant="body1" paragraph sx={{ color: 'text.secondary', lineHeight: 1.6 }}>
             {product.description.content}
           </Typography>
         </Collapse>
         {product.description.content.length > 100 && (
-          <Button onClick={() => setDescExpanded((prev) => !prev)}>
+          <Button onClick={() => setDescExpanded((prev) => !prev)} sx={{ mt: 1, textTransform: 'none' }}>
             {descExpanded ? "Show Less" : "Read More"}
           </Button>
         )}
